@@ -1,16 +1,22 @@
 <script lang="ts">
 import { defineComponent } from 'vue';
 import HelloWorld from '@components/HelloWorld.vue';
+import screenHeader from '@components/header/index.vue';
 export default defineComponent({
 	name: 'home',
-	components: { HelloWorld },
+	components: { 
+		screenHeader
+	 },
 	setup() {},
 });
 </script>
 
 <template>
-	<img alt="Vue logo" src="./assets/logo.png" />
-	<HelloWorld msg="Hello Vue 3 + TypeScript + Vite" />
+	<div>
+		
+		<screenHeader/>
+
+	</div>
 </template>
 
 <style lang="scss">

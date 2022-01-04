@@ -4,6 +4,7 @@ import 'element-plus/dist/index.css';
 
 import '@/assets/style/css/base.css'
 import '@/assets/style/css/animate.css'
+import '@/assets/font/font.css'
 
 import { App } from 'vue';
 export default {
