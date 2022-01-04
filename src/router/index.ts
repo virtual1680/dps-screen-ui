@@ -1,5 +1,5 @@
 import { createRouter, createWebHistory, RouteRecordRaw } from 'vue-router';
-import { getToken } from '@/utils/token'
+import { getToken } from '@/utils/token';
 const routes: Array<RouteRecordRaw> = [
 	{
 		path: '/',
@@ -7,9 +7,9 @@ const routes: Array<RouteRecordRaw> = [
 		component: () => import(/* webpackChunkName: "home" */ '@/views/home/Home.vue'),
 	},
 	{
-		path: '/login',
-		name: 'Login',
-		component: () => import(/* webpackChunkName: "login" */ '@/views/Login.vue'),
+		path: '/test',
+		name: 'Test',
+		component: () => import(/* webpackChunkName: "login" */ '@/views/home/Test.vue'),
 	},
 ];
 
@@ -33,6 +33,5 @@ const router = createRouter({
 // 		}
 // 	}
 // })
-
 
 export default router;

@@ -3,7 +3,7 @@
 </template>
 <style lang="scss">
 #app {
-	font-family: Avenir, Helvetica, Arial, sans-serif;
+	font-family: PingFangSC-Medium, PingFang SC;
 	-webkit-font-smoothing: antialiased;
 	-moz-osx-font-smoothing: grayscale;
 }
