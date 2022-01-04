@@ -10,7 +10,7 @@
   </div>
 </template>
 <script lang="ts">
-// 预警数据展示
+// 项目头部
 import { defineComponent } from 'vue';
 export default defineComponent({
 	name: 'header',
@@ -18,7 +18,7 @@ export default defineComponent({
 		
 	 },
 	setup() {
-		
+
 	},
 });
 </script>
