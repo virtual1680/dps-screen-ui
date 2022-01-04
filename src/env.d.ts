@@ -1,6 +1,6 @@
 /// <reference types="vite/client" />
 
-import { EChartsType } from 'echarts';
+import { ECharts } from 'echarts';
 
 declare module '*.vue' {
 	import { DefineComponent } from 'vue';
@@ -13,6 +13,6 @@ import { ComponentCustomProperties } from 'vue';
 
 declare module '@vue/runtime-core' {
 	interface ComponentCustomProperties {
-		$echarts: EChartsType;
+		$echarts: ECharts;
 	}
 }
