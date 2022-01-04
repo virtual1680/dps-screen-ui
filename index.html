@@ -9,5 +9,54 @@
   <body>
     <div id="app"></div>
     <script type="module" src="/src/main.ts"></script>
+    <script >
+      var isSetresize = !1
+      var vscale =  {x: 1, y: 1, offy: 0}
+
+      var getScaleX=function (t) {
+        return ~~(t / this.vscale.x)
+      }, getScaleY= function (t) {
+        return ~~((t - this.vscale.offy) / this.vscale.y)
+      }, getScaleW=function (t) {
+        return ~~(t / this.vscale.x)
+      }, getScaleH=function (t) {
+        return ~~(t / this.vscale.y)
+      }
+      var  setWindowView = function(geometric=true) {
+          var t = document.body.offsetWidth;
+          var e = document.body.offsetHeight;
+          var n = window.innerWidth;
+          var r = window.innerHeight;
+          var o = n / t;
+          var i = geometric ? o : r / e;
+          var s = ~~((r - e * i) / 2);
+
+          s < 0 && (s = 0, i = r / e), vscale = {
+            x: o,
+            y: i,
+            offy: s
+          }, document.getElementsByTagName('body')[0].scrollLeft = 0,
+          document.getElementsByTagName('body')[0].scrollTop = 0,
+          // .style.cssText
+          document.getElementsByTagName('body')[0].style.transformOrigin = "0 0",
+          document.getElementsByTagName('body')[0].style.transform = "translateY(" + s + "px) scale(" + o + "," + i + ")",
+          document.getElementsByTagName('body')[0].style.overflow = "hidden",
+          // document.getElementsByTagName('body')[0].css({
+          //   "transform-origin": "0 0",
+          //   transform: "translateY(" + s + "px) scale(" + o + "," + i + ")",
+          //   overflow: "hidden"
+          // }), 
+          isSetresize || (isSetresize = !0, window.onresize = function(){
+            setWindowView()
+
+          })
+        }
+        window.onload = function (){
+          setWindowView()
+        }
+
+
+    </script>
   </body>
 </html>
+
