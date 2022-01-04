@@ -1,10 +1,12 @@
 <script lang="ts">
 import { defineComponent } from 'vue';
 import screenHeader from '@components/header/index.vue';
+import workOrderStatus from './components/workOrderStatus.vue';
 export default defineComponent({
 	name: 'home',
 	components: {
 		screenHeader,
+		workOrderStatus
 	},
 	setup() {},
 });
@@ -14,7 +16,9 @@ export default defineComponent({
 	<div class="container">
 		<screenHeader />
 		<div class="content">
-			<div class="left-container"></div>
+			<div class="left-container">
+				<workOrderStatus style="height:370px;" />
+			</div>
 			<div class="right-container">
 				<div class="early-list"></div>
 				<div style="height: 245px; width: 100%; background: red"></div>
