@@ -1,13 +1,14 @@
 <script lang="ts">
 import { defineComponent, getCurrentInstance, ComponentInternalInstance, onMounted } from 'vue';
 import EarlyWarningNum from '@/components/earlyWarningNum/main.vue';
+import { EChartsOption } from 'echarts';
 export default defineComponent({
 	name: 'home',
 	components: { EarlyWarningNum },
 	setup() {
 		let { proxy } = getCurrentInstance() as ComponentInternalInstance;
 		onMounted(() => {
-			proxy?.$echarts.init();
+			(proxy?.$echarts as any).init();
 		});
 	},
 });
