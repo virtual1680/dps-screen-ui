@@ -1,5 +1,6 @@
 @font-face {
-    font-family: 'electronicFont';
+    /* stylelint-disable-next-line font-family-name-quotes */
+    font-family: "ElectronicFont";
     src: url('DS-DIGI.ttf');
     font-weight: normal;
     font-style: normal;
