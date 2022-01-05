@@ -1,42 +1,75 @@
 <template>
 	<div class="early-num-box">
-		<div class="icon"></div>
+		<div class="icon"><img :src="data[type].icon" alt="" /></div>
 		<div class="info">
 			<div>
-				<div class="title">{{ title }}预警</div>
+				<div class="title">{{ data[type].name }}预警</div>
 				<div class="num">{{ num }}</div>
 			</div>
 			<div class="compare">
-				<div class="label">{{ des }}</div>
-				<div class="value down">{{ percent }}%</div>
+				<div class="label">{{ data[type].des }}</div>
+				<div class="value">
+					<img :src="compare.down" alt="" />
+					{{ percent }}%
+				</div>
 			</div>
 		</div>
 	</div>
 </template>
 <script lang="ts">
 // 预警数据展示
-import { defineComponent } from 'vue';
+import { defineComponent, reactive } from 'vue';
+enum EarlyType {
+	yesterday = 'yesterday',
+	today = 'today',
+	week = 'week',
+	month = 'month',
+}
 export default defineComponent({
 	name: 'earlyWarningNum',
 	props: {
-		title: {
-			type: String,
-			default: '昨日',
-		},
 		num: {
 			type: Number || String,
 			default: 0,
 		},
-		des: {
-			type: String,
-			default: '同比昨日',
-		},
 		percent: {
 			type: Number || String,
-			default: 0,
+			default: 100,
+		},
+		type: {
+			type: String,
+			default: EarlyType.yesterday,
 		},
 	},
-	setup() {},
+	setup() {
+		let compare = reactive({
+			up: new URL('./img/up.png', import.meta.url).href,
+			down: new URL('./img/down.png', import.meta.url).href,
+		});
+		let data = reactive({
+			yesterday: {
+				name: '昨日',
+				icon: new URL('./img/yesterday.png', import.meta.url).href,
+				des: '同比昨日',
+			},
+			today: {
+				name: '今日',
+				icon: new URL('./img/day.png', import.meta.url).href,
+				des: '同比昨日',
+			},
+			week: {
+				name: '本周',
+				icon: new URL('./img/week.png', import.meta.url).href,
+				des: '同比上周',
+			},
+			month: {
+				name: '本月',
+				icon: new URL('./img/month.png', import.meta.url).href,
+				des: '同比上月',
+			},
+		});
+		return { data, compare };
+	},
 });
 </script>
 <style lang="scss" scoped>
@@ -45,13 +78,17 @@ export default defineComponent({
 	height: 100%;
 	background: red;
 	display: flex;
+	background: url('./img/bg.png') no-repeat;
+	background-size: 100% 100%;
 	.icon {
 		margin: 8px;
 		flex-shrink: 0;
 		align-self: center;
-		width: 40px;
-		height: 40px;
-		background: green;
+		width: 48px;
+		height: 48px;
+		img {
+			width: 100%;
+		}
 	}
 	.info {
 		padding: 5px 5px 8px 10px;
@@ -65,6 +102,7 @@ export default defineComponent({
 			font-weight: 400;
 			color: #a8dfff;
 			line-height: 17px;
+			letter-spacing: 2px;
 		}
 		.num {
 			font-size: 26px;
@@ -77,32 +115,25 @@ export default defineComponent({
 			align-items: flex-end;
 			align-self: flex-end;
 			.label {
+				flex-shrink: 0;
 				font-size: 10px;
 				font-weight: 500;
 				color: #536f72;
 			}
 			.value {
-				&::before {
-					content: '.';
-					color: transparent;
-					width: 10px;
-					height: 10px;
-					position: relative;
-					left: -5px;
-					font-size: 14px;
+				display: flex;
+				align-items: center;
+				img {
+					margin: 0 3px;
+					width: 6px;
+					height: 11px;
+					font-size: 10px;
 					font-weight: 400;
 				}
-				&.down::before {
-					background: gold;
-				}
-				&.up::before {
-					background: gold;
-				}
-				padding-left: 10px;
 				top: 2px;
 				position: relative;
-				font-size: 16px;
-				font-weight: 600;
+				font-size: 14px;
+				font-weight: 500;
 				color: #ffffff;
 			}
 		}

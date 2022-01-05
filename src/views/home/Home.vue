@@ -2,11 +2,15 @@
 import { defineComponent } from 'vue';
 import screenHeader from '@components/header/index.vue';
 import workOrderStatus from './components/workOrderStatus.vue';
+import EarlyWarningNum from '@/components/earlyWarningNum/main.vue';
+import ChartBox from '@components/chartBoxOne/main.vue';
 export default defineComponent({
 	name: 'home',
 	components: {
 		screenHeader,
-		workOrderStatus
+		workOrderStatus,
+		EarlyWarningNum,
+		ChartBox,
 	},
 	setup() {},
 });
@@ -17,11 +21,19 @@ export default defineComponent({
 		<screenHeader />
 		<div class="content">
 			<div class="left-container">
-				<workOrderStatus style="height:370px;" />
+				<workOrderStatus style="height: 370px" />
 			</div>
 			<div class="right-container">
-				<div class="early-list"></div>
-				<div style="height: 245px; width: 100%; background: red"></div>
+				<div class="early-list">
+					<EarlyWarningNum type="yesterday" style="width: 172px; height: 83px" />
+					<EarlyWarningNum type="today" style="width: 172px; height: 83px" />
+					<EarlyWarningNum type="week" style="width: 172px; height: 83px" />
+					<EarlyWarningNum type="month" style="width: 172px; height: 83px" />
+				</div>
+				<div class="early-chart">
+					<ChartBox type="early" style="width: 360px; height: 253px"></ChartBox>
+					<ChartBox type="earlyError" style="width: 360px; height: 253px"></ChartBox>
+				</div>
 				<div style="height: 280px; width: 100%; background: green"></div>
 				<div style="height: 310px; width: 100%; background: green"></div>
 			</div>
@@ -49,9 +61,18 @@ export default defineComponent({
 		justify-content: space-between;
 		flex-direction: column;
 		.early-list {
-			height: 80px;
+			height: 83px;
 			width: 100%;
 			background: violet;
+			display: flex;
+			justify-content: space-between;
+		}
+		.early-chart {
+			height: 253px;
+			width: 100%;
+			background: red;
+			display: flex;
+			justify-content: space-between;
 		}
 	}
 }
