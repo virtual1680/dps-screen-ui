@@ -1,14 +1,12 @@
 <template>
-	<div class="chart-one-box">
-		<div class="header">
-			<span>{{ data[type].title }}</span>
-		</div>
-		<div
-			class="content"
-			:style="`background:url(${data[type].bg}) no-repeat;background-size: 100% 100%;`">
-			<slot></slot>
-		</div>
-	</div>
+  <div class="chart-one-box">
+    <div class="header">
+      <span>{{ data[type].title }}</span>
+    </div>
+    <div class="content" :style="`background:url(${data[type].bg}) no-repeat;background-size: 100% 100%;`">
+      <slot></slot>
+    </div>
+  </div>
 </template>
 <script lang="ts">
 // 环 饼图 box
@@ -59,7 +57,6 @@ export default defineComponent({
 .chart-one-box {
 	width: 100%;
 	height: 100%;
-	background: red;
 	.header {
 		background: url('./img/header-bg.png') no-repeat;
 		background-size: 100% 100%;
