@@ -1,13 +1,7 @@
-<!--*************************************
-* @date:   2022-01-04   LYG  [创建文件]
-* @update: 2022-01-04   LYG  [编写功能]
-*
-* @description: 工单状态
-****************************************-->
 <template>
-  <ChartBoxTwo type="workStatus" style="height: 330; width: 100%">
-    <div class="chart" ref="lineChart"></div>
-  </ChartBoxTwo>
+	<ChartBox type="serve" style="width: 360px; height: 250px">
+		<div class="chart" ref="lineChart"></div>
+	</ChartBox>
 </template>
 <script lang="ts">
 // 工单状态
