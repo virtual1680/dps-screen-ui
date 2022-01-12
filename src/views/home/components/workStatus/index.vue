@@ -12,7 +12,7 @@
 <script lang="ts">
 // 工单状态
 import ChartBoxTwo from '@components/chartBoxTwo/main.vue';
-import { defineComponent, onMounted, reactive, ref, getCurrentInstance, toRefs } from 'vue';
+import { defineComponent, onMounted, reactive, ref, getCurrentInstance, toRefs,watch } from 'vue';
 import { EChartsOption, DataZoomComponentOption } from 'echarts';
 
 export default defineComponent({
@@ -25,8 +25,9 @@ export default defineComponent({
 		},
 	},
 	components: { ChartBoxTwo },
+
 	setup(props) {
-		const { chartData } = toRefs(props);
+		// const { chartData } = toRefs(props);
 		let lineChart = ref(null);
 		let { proxy } = getCurrentInstance() as any;
 		let chart: any = null;
@@ -40,18 +41,28 @@ export default defineComponent({
 			let dom = lineChart.value;
 			chart = proxy.$echarts.init(dom);
 		};
+		
+		watch(
+			()=>props.chartData,
+			(newVal,oldVal)=>{
+				init();
+
+			}
+		)
+
 		const init = () => {
 			initChart();
 			chartAnim();
 		};
 
 		onMounted(() => {
-			init();
+			// init();
 			window.addEventListener('resize', function () {
 				// 让我们的图表调用 resize这个方法
 				chart && chart.resize();
 			});
 		});
+
 		const chartAnim = () => {
 			zoomLoop && clearTimeout(zoomLoop);
 			chart.clear();
@@ -60,7 +71,7 @@ export default defineComponent({
 			updateChart(_option as EChartsOption);
 		};
 		const getOption = () => {
-			console.log(new Date().getTime());
+		console.log(props.chartData)
 			let _resData = [
 				{
 					num: 1,
@@ -148,84 +159,40 @@ export default defineComponent({
 					time: '云南',
 				},
 			];
-			let _areaColor = ['#13DEC7', '#46A6FF', '#00C7E7'];
-			let _seriesItem = [],
-				seriesArray = [];
+			let _areaColor = ['#00C7E7', '#00D4D3', '#FFFFFF'];
+			let chartData = props.chartData as any
 
-			xAxisData = _resData
-				.map(item => item.time)
-				//当前元素，在原始数组中的第一个索引==当前索引值，否则返回当前元素
-				.filter((item, index, arr) => arr.indexOf(item, 0) === index)
-				.sort((a, b) => {
-					if (a < b) {
-						return -1;
-					} else if (a > b) {
-						return 1;
-					}
-					return 0;
-				});
 
-			let arr = {
-				title: ['处理中', '已处理', '待处理'],
-				list: [
-					{
-						name: '北京',
-						item: [1, 3, 6],
-					},
-					{
-						name: '上海',
-						item: [1, 3, 6],
-					},
-				],
-			};
-			console.log('-=-=-=', xAxisData);
-			let legendData = _resData
-				.map(item => item.statisticsType)
-				//当前元素，在原始数组中的第一个索引==当前索引值，否则返回当前元素
-				.filter((item, index, arr) => arr.indexOf(item, 0) === index);
+			xAxisData = chartData.list.map((item:any) => item.name)
+
+			let legendData = chartData.title
 
 			let _seriesData: any = [];
 			// type  value date
-			legendData.forEach((legendName, index) => {
-				let _aData = new Array(xAxisData.length).fill('');
-				let typeData = _resData.filter((item: any) => item.statisticsType == legendName);
-				console.log(typeData);
-				xAxisData.forEach((name: any, i: any) => {
-					let arr = typeData.filter(item => item.time == name);
-					let val = arr.length != 0 ? arr[0].num : 0;
-					_aData[i] = val;
+			chartData.list.forEach((data:any, index:number) => {
+				let _aData:any = []
+				chartData.title.forEach((m:any,i:number) => {
+					_aData.push(data.item[i])
 				});
-				// console.log(_aData)
 				_seriesData.push({
-					name: legendName,
+					name: legendData[index],
 					type: 'bar',
-					color: _areaColor[index],
-					smooth: true,
-					symbolSize: 0,
-					areaStyle: {
-						color: {
-							type: 'linear',
-							x: 0,
-							y: 0,
-							x2: 0,
-							y2: 1,
-							colorStops: [
-								{
-									offset: 0,
-									color: _areaColor[index], // 0% 处的颜色
-								},
-								{
-									offset: 1,
-									color: 'rgba(255,255,255,0)', // 100% 处的颜色
-								},
-							],
-							global: false, // 缺省为 false
-						},
-					},
-					emphasis: {
-						symbolSize: 6,
-						// focus: 'series'
-					},
+					// color: _areaColor[index],
+					barWidth:8,
+					barMinHeight:2,
+					itemStyle: {
+            normal: {
+                color: new proxy.$echarts.graphic.LinearGradient(0, 0, 0, 1, [{
+                    offset: 0,
+                    color: _areaColor[index]
+                }, {
+                    offset: 1,
+                    color: 'rgba(0,0,0,0)'
+                }]),
+                barBorderRadius: [12,12,0,0],
+            },
+          },
+				
 					animationDelay: function (idx: any) {
 						// 越往后的数据延迟越大
 						return idx * 10;
@@ -246,11 +213,18 @@ export default defineComponent({
 						fontSize: 18,
 						color: '#FBFAFB',
 					},
+					axisPointer:{
+						type:"shadow",
+					}
 					// formatter: function (params){}
 				},
 				legend: {
 					data: legendData, //['ff', '联盟广告', '视频广告', '直接访问', '搜索引擎']
 					top: '1%',
+					textStyle:{
+						color:"#A8DFFF"
+					}
+
 				},
 				dataZoom: [
 					{
@@ -280,11 +254,11 @@ export default defineComponent({
 						rotate: 30,
 						margin: 20,
 						textStyle: {
-							color: 'rgba(71,95,123,.5)', //更改坐标轴文字颜色
+							color: '#A8DFFF', //更改坐标轴文字颜色
 							fontSize: 14, //更改坐标轴文字大小
 						},
 						formatter: function (value: any, index: any) {
-							return value.slice(0, 10) + '\n' + value.slice(10);
+							return value.slice(0, 4) + '\n' + value.slice(4);
 							// var date = new Date(value);
 							// return date.getFullYear()+'\n'+(date.getMonth() + 1)+'-'+date.getDate();
 						},
@@ -302,18 +276,18 @@ export default defineComponent({
 				},
 				yAxis: {
 					type: 'value',
-					splitNumber: 6,
+					splitNumber: 5,
 					axisLabel: {
 						show: true,
 						textStyle: {
-							color: 'rgba(71,95,123,.5)', //更改坐标轴文字颜色
+							color: '#5399AF', //更改坐标轴文字颜色
 							fontSize: 14, //更改坐标轴文字大小
 						},
 					},
 					axisLine: {
 						show: false,
 						lineStyle: {
-							color: 'rgba(38,151,255,.12)',
+							color: 'rgba(18, 81, 115, 0.6)',
 						},
 					},
 					splitLine: {

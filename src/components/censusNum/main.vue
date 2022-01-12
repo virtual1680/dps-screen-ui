@@ -9,12 +9,12 @@
 			</div>
 			<div v-if="type === 'workOrder'" class="info">
 				<div class="title">{{ data[type].name1 }}</div>
-				<div class="num">{{ num }}</div>
+				<div class="num">{{ nums }}</div>
 			</div>
 		</div>
 	</div>
 </template>
-<script lang="ts">
+<script 	lang="ts">
 // 统计数据展示
 import { defineComponent, reactive, ref, onMounted } from 'vue';
 enum CensusType {
@@ -27,6 +27,10 @@ export default defineComponent({
 	name: 'censusNum',
 	props: {
 		num: {
+			type: Number || String,
+			default: 0,
+		},
+		nums: {
 			type: Number || String,
 			default: 0,
 		},

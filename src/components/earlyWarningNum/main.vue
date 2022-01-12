@@ -4,13 +4,13 @@
 		<div class="info">
 			<div>
 				<div class="title">{{ data[type].name }}预警</div>
-				<div class="num">{{ num }}</div>
+				<div class="num">{{ num.value }}</div>
 			</div>
 			<div class="compare">
 				<div class="label">{{ data[type].des }}</div>
 				<div class="value">
-					<img :src="compare.down" alt="" />
-					{{ percent }}%
+					<img :src="compare[num.trend==0?'up':'down']" alt="" />
+					{{ num.rangeValue }}
 				</div>
 			</div>
 		</div>
@@ -29,13 +29,15 @@ export default defineComponent({
 	name: 'earlyWarningNum',
 	props: {
 		num: {
-			type: Number || String,
-			default: 0,
+			type: Object,
+			default: {
+				value:0
+			},
 		},
-		percent: {
-			type: Number || String,
-			default: 100,
-		},
+		// percent: {
+		// 	type: Number || String,
+		// 	default: 100,
+		// },
 		type: {
 			type: String,
 			default: EarlyType.yesterday,
