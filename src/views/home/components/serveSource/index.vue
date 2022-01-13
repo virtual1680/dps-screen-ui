@@ -1,6 +1,9 @@
 <template>
   <div class="chart-box">
-    <div class="content"></div>
+    <div class="content">
+      <slot></slot>
+
+		</div>
   </div>
 </template>
 <script lang="ts">

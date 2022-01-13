@@ -4,13 +4,17 @@
       <div class="title">服务器分类</div>
       <div class="detail">详情</div>
     </div>
-    <div class="content"></div>
+    <div class="content">
+			<chart/>
+		</div>
   </div>
 </template>
 <script lang="ts">
 import { defineComponent } from 'vue';
+import chart from "./chart/index.vue"
 export default defineComponent({
 	name: 'serveSource',
+	components: {  chart},
 	setup() {},
 });
 </script>

@@ -1,18 +1,23 @@
+<!--*************************************
+* @date:   2022-01-04   LYG  [创建文件]
+* @update: 2022-01-04   LYG  [编写功能]
+*
+* @description: 预警分布环比
+****************************************-->
 <template>
-	<ChartBox type="serve" style="width: 360px; height: 250px">
-		<div class="chart" ref="lineChart"></div>
-	</ChartBox>
+    <ChartBox type="early" style="width: 360px; height: 253px;">
+    <div class="chart" ref="lineChart"></div>
+  </ChartBox>
 </template>
 <script lang="ts">
-// 服务器节点分布
 import ChartBox from '@components/chartBoxOne/main.vue';
-import { defineComponent, onMounted, reactive, ref, getCurrentInstance, toRefs } from 'vue';
+import { defineComponent, onMounted, reactive, ref, getCurrentInstance, toRefs,watch } from 'vue';
 import { EChartsOption, DataZoomComponentOption } from 'echarts';
 
-import {apiServerNope} from "@/api/home"
+import {apiWarningCategory} from "@/api/home"
 
 export default defineComponent({
-	name: 'serverNode',
+	name: 'workStatus',
 	props: {
 		content: String,
 		chartData: {
@@ -21,9 +26,10 @@ export default defineComponent({
 		},
 	},
 	components: { ChartBox },
+
 	setup(props) {
-		let lineChart = ref(null);
 		let timer:any = null
+		let lineChart = ref(null);
 		let { proxy } = getCurrentInstance() as any;
 		let chart: any = null;
 		let option: object = {};
@@ -32,8 +38,8 @@ export default defineComponent({
 		let zoomLoop: any = null;
 		let xAxisData: any = [];
 
+    
     let echartData:any = [];
-
 
 
 		const initChart = () => {
@@ -41,6 +47,14 @@ export default defineComponent({
 			let dom = lineChart.value;
 			chart = proxy.$echarts.init(dom);
 		};
+		
+		watch(
+			()=>props.chartData,
+			(newVal,oldVal)=>{
+
+			}
+		)
+
 		const init = async () => {
       await getData()
 			initChart();
@@ -56,9 +70,8 @@ export default defineComponent({
 		});
     // 获取数据
     const getData = async ()=>{
-      await apiServerNope().then(res=>{
-				let data = res.data
-				
+      await apiWarningCategory().then(res=>{
+				let data = res.data.percentage
 				echartData = data.map((item:any)=>{
 					return{
 						name:item.type,
@@ -68,9 +81,6 @@ export default defineComponent({
       })
     }
 
-
-
-
 		const chartAnim = () => {
 			zoomLoop && clearTimeout(zoomLoop);
 			chart.clear();
@@ -78,13 +88,44 @@ export default defineComponent({
 			chart.setOption(_option);
       dynamic(chart, _option as EChartsOption,5000);
 		};
+        
+    const formatNumber = (num:any)=>{
+        let reg = /(?=(\B)(\d{3})+$)/g;
+        return num.toString().replace(reg, ',');
+    }
+    let total = echartData.reduce((a:any, b:any) => {
+        return a + b.value * 1
+    }, 0);
+
 		const getOption = () => {
+
 			let color = [
-				'#00E4FF','#0B9AA8','#00BDFF','#FFFFFF','#7DF5FF',
+				'#00E4FF','#0B9AA8','#00BDFF','#7DF5FF','#FFFFFF',
 				'#0E7CE2', '#FF8352', '#E271DE', '#F8456B', '#00FFFF', '#4AEAB0'
 			];
 			let option = {
         color: color,
+
+				title: [{
+						text: '{name|总量}\n{val|' + formatNumber(total) + '}',
+						top: '25%',
+						left: 'center',
+						textStyle: {
+								rich: {
+										name: {
+												fontSize: 12,
+												fontWeight: 'normal',
+												color: '#8FFFEA',
+												padding: [10, 0]
+										},
+										val: {
+												fontSize: 20,
+												fontWeight: 'bold',
+												color: '#00E4FF',
+										}
+								}
+						}
+				}],
 				tooltip: {
 					show: true,
 					trigger: 'item',
@@ -96,35 +137,53 @@ export default defineComponent({
 						fontSize: 18,
 						color: '#FBFAFB',
 					},
+					axisPointer:{
+						type:"shadow",
+					}
 					// formatter: function (params){}
 				},
 				legend: {
-					top: '1%',
-					show:false,
+					show: false,
+					// data: legendData, //['ff', '联盟广告', '视频广告', '直接访问', '搜索引擎']
+					bottom: '10%',
+					textStyle:{
+						color:"#A8DFFF",
+            fontSize:12
+					},
+          itemWidth:12,
+          itemHeight:5,
+					// formatter: function (name:string){
+          //   console.log(name)
+          //   return name
+          // }
+
 				},
 				grid: {
-					left: '2%',
-					right: '2%',
-					bottom: '2%',
-					top: '2%',
+					left: '0%',
+					top: '0%',
 					containLabel: true,
+
 					// backgroundColor: "rgba(0,0,0,0.2)",
 					// borderWidth: 0
 				},
-
-				series: [
-					{
-						name: '',
-						type: 'pie',
-						radius: '50%',
-						data: echartData,
+        series: [{
+            type: 'pie',
+            radius: ['46%', '60%'],
+            center: ['50%', '45%'],
+            data: echartData,
+            hoverAnimation: false,
+            labelLine: {
+              length: 5,
+              length2: 10,
+            },
             label: {
-              formatter: '{name|{b}}\n{prent|{d}}%',
-              fontSize:12,
-              color:"#5399AF",
+              formatter: '{name|{b}}\n{d}%',
+              fontSize:14,
+              color:"#00E4FF",
 							rich: {
 								name: {
 									fontSize: 12,
+									padding:[0,0,4,0],
 									color: '#A8DFFF'
 								},
 								prent: {
@@ -133,15 +192,7 @@ export default defineComponent({
 								}
 							}
             },
-						emphasis: {
-							itemStyle: {
-								shadowBlur: 10,
-								shadowOffsetX: 0,
-								shadowColor: 'rgba(0, 0, 0, 0.5)'
-							}
-						}
-					}
-				]
+        }],
 			};
 			return option;
 		};
@@ -175,8 +226,6 @@ export default defineComponent({
 			};
       timer = setTimeout(fn, sec);
     }
-
-
 		return {
 			lineChart,
 		};

@@ -19,7 +19,7 @@ export default defineConfig({
 		proxy: {
 			'/api': {
 				// target: 'http://trace.leliven.com:8080/',
-				target: 'http://10.10.5.86:13002/',
+				target: 'http://10.10.5.84:13002/',
 				changeOrigin: true,
 				rewrite: path => path.replace(/^\/api/, '/'),
 			},

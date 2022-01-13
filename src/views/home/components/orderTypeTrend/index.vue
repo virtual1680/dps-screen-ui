@@ -2,21 +2,22 @@
 * @date:   2022-01-04   LYG  [创建文件]
 * @update: 2022-01-04   LYG  [编写功能]
 *
-* @description: 工单状态
+* @description: 工单数据趋势
 ****************************************-->
 <template>
-  <ChartBoxTwo type="workStatus" style="height: 330; width: 100%">
+  <ChartBoxTwo type="early" style="height: 100%; width: 100%">
     <div class="chart" ref="lineChart"></div>
   </ChartBoxTwo>
 </template>
 <script lang="ts">
-// 工单状态
+// 工单数据趋势
 import ChartBoxTwo from '@components/chartBoxTwo/main.vue';
 import { defineComponent, onMounted, reactive, ref, getCurrentInstance, toRefs,watch } from 'vue';
 import { EChartsOption, DataZoomComponentOption } from 'echarts';
 
+import {apiServerCategor} from "@/api/home"
 export default defineComponent({
-	name: 'workStatus',
+	name: 'orderTypeTrend',
 	props: {
 		content: String,
 		chartData: {
@@ -46,23 +47,30 @@ export default defineComponent({
 		watch(
 			()=>props.chartData,
 			(newVal,oldVal)=>{
-				init();
 
 			}
 		)
 
-		const init = () => {
+		const init = async () => {
+      await getData()
 			initChart();
 			chartAnim();
 		};
 
 		onMounted(() => {
-			// init();
+			init();
 			window.addEventListener('resize', function () {
 				// 让我们的图表调用 resize这个方法
 				chart && chart.resize();
 			});
 		});
+    // 获取数据
+    const getData = async ()=>{
+      await apiServerCategor().then(res=>{
+				let data = res.data
+				console.log("data")
+      })
+    }
 
 		const chartAnim = () => {
 			zoomLoop && clearTimeout(zoomLoop);
@@ -72,6 +80,7 @@ export default defineComponent({
 			// updateChart(_option as EChartsOption);
       dynamic(chart, _option as EChartsOption,5000);
 		};
+
 		const getOption = () => {
 			let _areaColor = ['#00C7E7', '#00D4D3', '#FFFFFF'];
 			let chartData = props.chartData as any

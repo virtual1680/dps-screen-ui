@@ -1,18 +1,18 @@
 <template>
-	<ChartBox type="serve" style="width: 360px; height: 250px">
+  <ServeSource style="width: 360px; height: 250px">
 		<div class="chart" ref="lineChart"></div>
-	</ChartBox>
+	</ServeSource>
 </template>
 <script lang="ts">
-// 服务器节点分布
-import ChartBox from '@components/chartBoxOne/main.vue';
+// 服务器
+import ServeSource from '../serveSource/index.vue';
 import { defineComponent, onMounted, reactive, ref, getCurrentInstance, toRefs } from 'vue';
 import { EChartsOption, DataZoomComponentOption } from 'echarts';
 
 import {apiServerNope} from "@/api/home"
 
 export default defineComponent({
-	name: 'serverNode',
+	name: 'serveResources',
 	props: {
 		content: String,
 		chartData: {
@@ -20,7 +20,7 @@ export default defineComponent({
 			default: () => [],
 		},
 	},
-	components: { ChartBox },
+	components: { ServeSource },
 	setup(props) {
 		let lineChart = ref(null);
 		let timer:any = null
@@ -58,7 +58,6 @@ export default defineComponent({
     const getData = async ()=>{
       await apiServerNope().then(res=>{
 				let data = res.data
-				
 				echartData = data.map((item:any)=>{
 					return{
 						name:item.type,
@@ -76,7 +75,6 @@ export default defineComponent({
 			chart.clear();
 			let _option = getOption();
 			chart.setOption(_option);
-      dynamic(chart, _option as EChartsOption,5000);
 		};
 		const getOption = () => {
 			let color = [
@@ -86,7 +84,7 @@ export default defineComponent({
 			let option = {
         color: color,
 				tooltip: {
-					show: true,
+					show: false,
 					trigger: 'item',
 					backgroundColor: 'rgba(6, 59, 108, 0.6)',
 					extraCssText: 'box-shadow: inset rgb(23, 213, 235) 0px 0px 15px 1px;',
@@ -111,71 +109,82 @@ export default defineComponent({
 					// backgroundColor: "rgba(0,0,0,0.2)",
 					// borderWidth: 0
 				},
+				title: [{
+						text: '75%',
+						left: '50%',
+						top: '42%',
+						textAlign: 'center',
+						textStyle: {
+								fontSize: 32,
+								fontWeight: '600',
+								color: '#00E4FF',
+								textAlign: 'center',
+						},
+				}, {
+						text: '服务器资源剩余',
+						x: '50%',
+						y: '30%',
+						textAlign: 'center',
+						textStyle: {
+							fontSize: 14,
+							fontWeight: '400',
+							color: '#fff',
+							textAlign: 'center',
+							textShadow: '0px 1px 3px rgba(143, 255, 234, 0.5)'
+						},
+				},],
+				polar: {
+						radius: ['66%', '61%'],
+						center: ['50%', '47%'],
+				},
+				angleAxis: {
+						max: 100,
+						show: false,
+						startAngle: 90,
+				},
+				radiusAxis: {
+						type: 'category',
+						show: true,
+						inverse:true,
+						axisLabel: {
+								show: false,
+						},
+						axisLine: {
+								show: false,
 
-				series: [
-					{
+						},
+						axisTick: {
+								show: false
+						},
+				},
+
+				series: [{
 						name: '',
-						type: 'pie',
-						radius: '50%',
-						data: echartData,
-            label: {
-              formatter: '{name|{b}}\n{prent|{d}}%',
-              fontSize:12,
-              color:"#5399AF",
-							rich: {
-								name: {
-									fontSize: 12,
-									color: '#A8DFFF'
-								},
-								prent: {
-									fontSize: 14,
-									color: '#00E4FF'
+						type: 'bar',
+						roundCap: true,
+						barWidth: 60,
+						showBackground: true,
+						backgroundStyle: {
+								color: 'rgba(0,0,0,0)',
+						},
+						data: [75],
+						coordinateSystem: 'polar',
+						itemStyle: {
+								normal: {
+										color: new proxy.$echarts.graphic.LinearGradient(1, 0, 0, 0, [{
+												offset: 0,
+												color: '#0ff'
+										}, {
+												offset: 1,
+												color: '#02aeff'
+										}]),
 								}
-							}
-            },
-						emphasis: {
-							itemStyle: {
-								shadowBlur: 10,
-								shadowOffsetX: 0,
-								shadowColor: 'rgba(0, 0, 0, 0.5)'
-							}
 						}
-					}
+					},
 				]
 			};
 			return option;
 		};
-    // tooltip自动轮询
-    const dynamic = (chart, op:EChartsOption, sec:number)=>{
-			op.currentIndex = -1;
-			const fn = () => {
-					let dataLen = op.series[0].data.length;
-					if (dataLen <= 0) return;
-					// 取消之前高亮的图形
-					chart.dispatchAction({
-						type: "downplay",
-						seriesIndex: 0,
-						dataIndex: op.currentIndex,
-					});
-					op.currentIndex = (op.currentIndex + 1) % dataLen;
-					// 高亮当前图形
-					chart.dispatchAction({
-						type: "highlight",
-						seriesIndex: 0,
-						dataIndex: op.currentIndex,
-					});
-					// 显示 tooltip
-					chart.dispatchAction({
-						type: "showTip",
-						seriesIndex: 0,
-						dataIndex: op.currentIndex,
-					});
-					timer && clearTimeout(timer);
-					timer = setTimeout(fn, sec);
-			};
-      timer = setTimeout(fn, sec);
-    }
-
 
 		return {
 			lineChart,

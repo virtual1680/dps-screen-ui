@@ -2,7 +2,7 @@
 * @date:   2022-01-04   LYG  [创建文件]
 * @update: 2022-01-04   LYG  [编写功能]
 *
-* @description: 工单状态
+* @description: 设备信息
 ****************************************-->
 <template>
     <ChartBox type="device" style="width: 360px; height: 253px;">
@@ -28,6 +28,7 @@ export default defineComponent({
 	components: { ChartBox },
 
 	setup(props) {
+		let timer:any = null
 		let lineChart = ref(null);
 		let { proxy } = getCurrentInstance() as any;
 		let chart: any = null;
@@ -36,11 +37,6 @@ export default defineComponent({
 		let dataZoomTime = 3000;
 		let zoomLoop: any = null;
 		let xAxisData: any = [];
-
-    let color = [
-      '#00E4FF','#0B9AA8','#00BDFF','#FFFFFF','#7DF5FF',
-      '#0E7CE2', '#FF8352', '#E271DE', '#F8456B', '#00FFFF', '#4AEAB0'
-      ];
 
     
     let echartData:any = [];
@@ -75,11 +71,8 @@ export default defineComponent({
     // 获取数据
     const getData = async ()=>{
       await apiDeviceInfo().then(res=>{
-        console.log('res')
 				let data = res.data.percentage
-        console.log(res.data.percentage)
 				echartData = data.map((item:any)=>{
-					console.log(item)
 					return{
 						name:item.type,
 						value:item.val
@@ -93,28 +86,46 @@ export default defineComponent({
 			chart.clear();
 			let _option = getOption();
 			chart.setOption(_option);
+      dynamic(chart, _option as EChartsOption,5000);
 		};
         
     const formatNumber = (num:any)=>{
         let reg = /(?=(\B)(\d{3})+$)/g;
         return num.toString().replace(reg, ',');
     }
-    let total = echartData.reduce((a, b:any) => {
+    let total = echartData.reduce((a:any, b:any) => {
         return a + b.value * 1
     }, 0);
 
 		const getOption = () => {
-      console.log(props.chartData)
-			let _areaColor = ['#00C7E7', '#00D4D3', '#FFFFFF'];
 
-
-        console.log(echartData)
-
-
-			let _seriesData: any = [];
-
+			let color = [
+				'#00E4FF','#0B9AA8','#00BDFF','#FFFFFF','#7DF5FF',
+				'#0E7CE2', '#FF8352', '#E271DE', '#F8456B', '#00FFFF', '#4AEAB0'
+			];
 			let option = {
         color: color,
+
+				title: [{
+						text: '{name|总量}\n{val|' + formatNumber(total) + '}',
+						top: '25%',
+						left: 'center',
+						textStyle: {
+								rich: {
+										name: {
+												fontSize: 12,
+												fontWeight: 'normal',
+												color: '#8FFFEA',
+												padding: [10, 0]
+										},
+										val: {
+												fontSize: 20,
+												fontWeight: 'bold',
+												color: '#00E4FF',
+										}
+								}
+						}
+				}],
 				tooltip: {
 					show: true,
 					trigger: 'item',
@@ -173,6 +184,36 @@ export default defineComponent({
 			};
 			return option;
 		};
+    // tooltip自动轮询
+    const dynamic = (chart, op:EChartsOption, sec:number)=>{
+			op.currentIndex = -1;
+			const fn = () => {
+					let dataLen = op.series[0].data.length;
+					if (dataLen <= 0) return;
+					// 取消之前高亮的图形
+					chart.dispatchAction({
+						type: "downplay",
+						seriesIndex: 0,
+						dataIndex: op.currentIndex,
+					});
+					op.currentIndex = (op.currentIndex + 1) % dataLen;
+					// 高亮当前图形
+					chart.dispatchAction({
+						type: "highlight",
+						seriesIndex: 0,
+						dataIndex: op.currentIndex,
+					});
+					// 显示 tooltip
+					chart.dispatchAction({
+						type: "showTip",
+						seriesIndex: 0,
+						dataIndex: op.currentIndex,
+					});
+					timer && clearTimeout(timer);
+					timer = setTimeout(fn, sec);
+			};
+      timer = setTimeout(fn, sec);
+    }
 		return {
 			lineChart,
 		};

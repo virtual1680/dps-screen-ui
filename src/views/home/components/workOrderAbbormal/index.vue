@@ -1,18 +1,18 @@
 <template>
-	<ChartBox type="serve" style="width: 360px; height: 250px">
+  <ChartBox type="workOrder" style="width: 360px; height: 255px">
 		<div class="chart" ref="lineChart"></div>
 	</ChartBox>
 </template>
 <script lang="ts">
-// 服务器节点分布
+// 工单故障
 import ChartBox from '@components/chartBoxOne/main.vue';
 import { defineComponent, onMounted, reactive, ref, getCurrentInstance, toRefs } from 'vue';
 import { EChartsOption, DataZoomComponentOption } from 'echarts';
 
-import {apiServerNope} from "@/api/home"
+import {apiOrderStatus} from "@/api/home"
 
 export default defineComponent({
-	name: 'serverNode',
+	name: 'workOrderAbbormal',
 	props: {
 		content: String,
 		chartData: {
@@ -34,6 +34,7 @@ export default defineComponent({
 
     let echartData:any = [];
 
+		let total:number = 0 
 
 
 		const initChart = () => {
@@ -56,19 +57,30 @@ export default defineComponent({
 		});
     // 获取数据
     const getData = async ()=>{
-      await apiServerNope().then(res=>{
+      await apiOrderStatus().then(res=>{
 				let data = res.data
-				
 				echartData = data.map((item:any)=>{
 					return{
 						name:item.type,
 						value:item.value
 					}
 				})
+
+				sum()
       })
     }
 
+		const sum = ()=>{
+			total =  echartData.map((item:any)=>item.value).reduce((total:number,num:number)=>{
+					return total*1 + num*1
+			})
 
+		}
+
+		const computePercent = (name:string)=>{
+				let num:number = echartData.filter((item:any)=>item.name == name)[0].value || 0
+				return (num/total *100).toFixed(2)
+		}
 
 
 		const chartAnim = () => {
@@ -99,8 +111,19 @@ export default defineComponent({
 					// formatter: function (params){}
 				},
 				legend: {
-					top: '1%',
-					show:false,
+					top: 'center',
+					right: '6%',
+					orient: 'vertical' ,
+					textStyle:{
+						fontSize: 14,
+						fontWeight: 400,
+						color: '#00E4FF',
+					},
+					formatter:(name:string)=>{
+						let percent = computePercent(name)
+						return name +'   '+ percent+'%'
+					}
+
 				},
 				grid: {
 					left: '2%',
@@ -117,8 +140,10 @@ export default defineComponent({
 						name: '',
 						type: 'pie',
 						radius: '50%',
+						center:['30%','50%'],
 						data: echartData,
             label: {
+							show:false,
               formatter: '{name|{b}}\n{prent|{d}}%',
               fontSize:12,
               color:"#5399AF",

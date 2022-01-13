@@ -11,6 +11,11 @@ import ServeCategory from './components/serveCategory/index.vue';
 
 import WorkStatus from './components/workStatus/index.vue';
 import deviceNews from './components/deviceNews/index.vue';
+import serveNode from './components/serveNode/index.vue';
+import serveResources from './components/serveResources/index.vue';
+import earlyWarning from './components/earlyWarning/index.vue';
+import warningAbnormal from './components/warningAbnormal/index.vue';
+import workOrderAbbormal from './components/workOrderAbbormal/index.vue';
 
 import {apiLeftTopTags,apiRightTopTags,apiOrderStatusTrend} from "@/api/home"
 export default defineComponent({
@@ -23,9 +28,15 @@ export default defineComponent({
 		CensusNum,
 		ChartBoxTwo,
 		ServeSource,
-		ServeCategory,
+		ServeCategory,//服务器分类
+
 		WorkStatus,
 		deviceNews,//设备信息
+		serveNode,//服务器节点
+		serveResources,
+		earlyWarning,//预警分布
+		warningAbnormal,//预警异常
+		workOrderAbbormal,//工单故障
 	},
 	setup() {
 		let data = reactive({
@@ -85,21 +96,20 @@ export default defineComponent({
               <CensusNum type="deviceOff" :num="data.leftTopData.deviceOffLine" style="height: 100%; width: 126px" />
               <CensusNum type="workOrder" :num="data.leftTopData.todayWorkOrder" :nums="data.leftTopData.yesterdayWorkOrder" style="height: 100%; width: 325px" />
             </div>
-            <div class="flex-jc-cb">
-              <ChartBox type="serve" style="width: 360px; height: 250px"></ChartBox>
-              <ServeSource style="width: 360px; height: 250px"></ServeSource>
+            <div class="flex-jc-cb">							
+              <serveNode/>
+							<serveResources/>
             </div>
           </div>
           <div class="item-2"></div>
           <div class="item-3 flex-jc-cb flex-d-c">
+					<serverCategor/>
             <ServeCategory style="width: 360px; height: 342px" />
 						<!-- 设备信息 -->
 						<deviceNews/>
           </div>
           <div class="item-4">
-            <ChartBox type="workOrder" style="width: 360px; height: 255px">
-							
-						</ChartBox>
+						<workOrderAbbormal/>
           </div>
           <div class="item-5">
 						<!-- 工单状态  -->
@@ -116,14 +126,14 @@ export default defineComponent({
           <EarlyWarningNum type="month" :num="data.rightTopData.thisMonthAlarm" style="width: 172px; height: 83px" />
         </div>
         <div class="early-chart flex-jc-cb">
-          <ChartBox type="early" style="width: 360px; height: 253px"></ChartBox>
-          <ChartBox type="earlyError" style="width: 360px; height: 253px"></ChartBox>
+					<earlyWarning/>
+					<warningAbnormal/>
         </div>
         <div style="height: 280px; width: 100%">
-          <ChartBoxTwo type="early" style="height: 100%; width: 100%" />
+  <ChartBoxTwo type="early" style="height: 100%; width: 100%"/>
         </div>
         <div style="height: 306px; width: 100%;">
-          <ChartBoxTwo type="early" style="height: 100%; width: 100%" />
+          <ChartBoxTwo type="workData" style="height: 100%; width: 100%" />
         </div>
       </div>
     </div>
