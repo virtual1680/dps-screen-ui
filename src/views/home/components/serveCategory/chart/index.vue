@@ -105,7 +105,12 @@ export default defineComponent({
 						type:"shadow",
 					},
 					formatter:(params:any)=>{
-						console.log(params)
+						let item  = params.filter((item:any)=>item.seriesName!='背景')
+						let str = ''
+						item.forEach((item:any) => {
+							str+=item.name+":"+item.value+'\n'
+						});
+						return str
 					}
 				},
 				legend: {
