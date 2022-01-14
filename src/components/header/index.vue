@@ -6,7 +6,7 @@
 ****************************************-->
 <template>
   <div class="ly-header">
-    <div class="time"></div>
+    <!-- <img src="../../assets/header.png" style="" alt=""> -->
   </div>
 </template>
 <script lang="ts">
@@ -28,10 +28,11 @@ export default defineComponent({
   min-width: 1920px;
   height: 80px;
   position: relative;
-  // background-image: url("@{localUrl}/images/0-可视化公用组件/header.png");
-	background-color: red;
+  background-image: url("@/assets/header.png");
+  background-size: contain;
+	// background-color: red;
   &:before {
-    content: "";
+    // content: "";
     // background-image: url("@{localUrl}/images/0-可视化公用组件/header-g.png");
     width: 1920px;
     height: 80px;

@@ -168,7 +168,7 @@ export default defineComponent({
 				grid-row: 1 / span 1;
 			}
 			.item-2 {
-				background: red;
+				// background: red;
 				grid-column: 3 / span 1;
 				grid-row: 1 / span 2;
 			}

@@ -39,7 +39,7 @@ export default defineComponent({
 		let xAxisData: any = [];
 
     
-    let echartData:any = [];
+    let echartData:any = {};
 
 
 		const initChart = () => {
@@ -71,16 +71,14 @@ export default defineComponent({
     // 获取数据
     const getData = async ()=>{
       await apiErrorCategory().then(res=>{
-				let data = res.data
-				console.log("data")
-				echartData = data.map((item:any)=>{
-					return{
-						name:item.type,
-						value:item.value
-					}
-				})
+				echartData = res.data
+				console.log("sdfsdf",echartData)
       })
     }
+		// alarmNum: 1
+		// exceptNum: 0
+		// normalNum: 1
+
 
 		const chartAnim = () => {
 			zoomLoop && clearTimeout(zoomLoop);
@@ -94,12 +92,24 @@ export default defineComponent({
         let reg = /(?=(\B)(\d{3})+$)/g;
         return num.toString().replace(reg, ',');
     }
-    let total = echartData.reduce((a:any, b:any) => {
-        return a + b.value * 1
-    }, 0);
 
 		const getOption = () => {
 
+			let total = echartData.alarmNum + echartData.exceptNum + echartData.normalNum ;
+			let seriesData = [
+				{
+					name:"预警台数",
+					value:echartData.alarmNum,
+				},
+				{
+					name:"异常台数",
+					value:echartData.exceptNum,
+				},
+				{
+					name:"正常台数",
+					value:echartData.normalNum,
+				}
+			]
 			let color = [
 				'#00E4FF','#0B9AA8','#FF8D44','#00BDFF','#FFFFFF','#7DF5FF',
 				'#0E7CE2', '#FF8352', '#E271DE', '#F8456B', '#00FFFF', '#4AEAB0'
@@ -145,7 +155,7 @@ export default defineComponent({
 				},
 				legend: {
 					// data: legendData, //['ff', '联盟广告', '视频广告', '直接访问', '搜索引擎']
-					bottom: '10%',
+					bottom: '12%',
 					textStyle:{
 						color:"#A8DFFF",
             fontSize:12
@@ -169,17 +179,17 @@ export default defineComponent({
         series: [{
             type: 'pie',
             radius: ['46%', '60%'],
-            center: ['50%', '39%'],
-            data: echartData,
+            center: ['51%', '41%'],
+            data: seriesData,
             hoverAnimation: false,
             labelLine: {
-              length: 0,
-              length2: 0,
+              length: 5,
+              length2: 5,
             },
             label: {
               formatter: '{d}%',
               fontSize:12,
-              color:"#5399AF"
+              color:"#A8DFFF"
             },
         }],
 			};
