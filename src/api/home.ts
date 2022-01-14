@@ -119,6 +119,16 @@ export const apiServerCategory = () => {
 	});
 };
 
+//  预警趋势
+export const apiWarningTrend = () => {
+	return request({
+		url: '/m-screen/statistics/getWarningTrend',
+		method: 'get',
+		params: {
+		},
+	});
+};
+
 // 工单数据趋势
 export const apiOrderTypeTrend = () => {
 	return request({
@@ -128,6 +138,9 @@ export const apiOrderTypeTrend = () => {
 		},
 	});
 };
+
+
+
 
 
 

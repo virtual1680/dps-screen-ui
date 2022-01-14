@@ -203,7 +203,7 @@ export default defineComponent({
 					borderColor: '#17D5EB',
 					borderWidth: 1,
 					textStyle: {
-						fontSize: 18,
+						fontSize: 12,
 						color: '#FBFAFB',
 					},
 					// formatter: function (params){}

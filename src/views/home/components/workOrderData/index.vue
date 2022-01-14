@@ -2,19 +2,23 @@
 * @date:   2022-01-04   LYG  [创建文件]
 * @update: 2022-01-04   LYG  [编写功能]
 *
-* @description: 服务器分类
+* @description: 工单状态
 ****************************************-->
 <template>
+  <ChartBoxTwo type="workData" style="height: 100%; width: 100%">
     <div class="chart" ref="lineChart"></div>
+  </ChartBoxTwo>
 </template>
 <script lang="ts">
-// 服务器分类
+// 工单状态
+import ChartBoxTwo from '@components/chartBoxTwo/main.vue';
 import { defineComponent, onMounted, reactive, ref, getCurrentInstance, toRefs,watch } from 'vue';
 import { EChartsOption, DataZoomComponentOption } from 'echarts';
 
-import {apiServerCategory} from "@/api/home"
+import {apiOrderTypeTrend} from "@/api/home"
+
 export default defineComponent({
-	name: 'serverCategor',
+	name: 'workStatus',
 	props: {
 		content: String,
 		chartData: {
@@ -22,11 +26,10 @@ export default defineComponent({
 			default: () => [],
 		},
 	},
-	components: {  },
+	components: { ChartBoxTwo },
 
 	setup(props) {
 		let timer:any = null
-		let echartData:any = []
 		let lineChart = ref(null);
 		let { proxy } = getCurrentInstance() as any;
 		let chart: any = null;
@@ -34,7 +37,11 @@ export default defineComponent({
 		let dataZoomLength = 7;
 		let dataZoomTime = 3000;
 		let zoomLoop: any = null;
+
 		let xAxisData: any = [];
+    let echartData:any = [];
+
+
 		const initChart = () => {
 			//使用主题初始化
 			let dom = lineChart.value;
@@ -63,9 +70,10 @@ export default defineComponent({
 		});
     // 获取数据
     const getData = async ()=>{
-      await apiServerCategory().then(res=>{
-				echartData = res.data
-				console.log("data",echartData)
+      await apiOrderTypeTrend().then(res=>{
+				let data = res.data
+				echartData = data
+				console.log("))))))",echartData)
       })
     }
 
@@ -77,17 +85,51 @@ export default defineComponent({
 			// updateChart(_option as EChartsOption);
       dynamic(chart, _option as EChartsOption,5000);
 		};
+
+
 		
-
 		const getOption = () => {
-			var salvProName = echartData.map((item:any) => item.name);
-					xAxisData = salvProName
-			var salvProValue =echartData.map((item:any) => item.count);
-			var salvProMax =[];//背景按最大值
+			let _areaColor = [
+				'rgba(11, 154, 168,', 
+				'rgba(0, 228, 255,', 
+				'rgba(255, 141, 68,',
+				'rgba(241, 94, 94, ',
+				'rgba(51, 63, 255,',
+				'rgba(255, 225, 255,',
+				'rgba(255, 255, 255,'];
+			 xAxisData = echartData.date
 
-			for (let i = 0; i < salvProValue.length; i++) {
-					salvProMax.push(salvProValue[0])
-			}
+			let _seriesData: any = [];
+			
+			echartData.list.forEach((list:any,k:number) => {
+				_seriesData.push({
+						name: list.name,
+						type: 'line',
+						symbol: 'none',
+						itemStyle: {
+							color: _areaColor[k]+'1)',
+							lineStyle: {
+									color: _areaColor[k]+'1)',
+									width: 2,
+							},
+							areaStyle: {
+									//区域填充样式
+									color: new proxy.$echarts.graphic.LinearGradient(0, 1, 0, 0, [
+											{
+													offset: 0,
+													color: _areaColor[k]+' 0.1)',
+											},
+											{
+													offset: 1,
+													color: _areaColor[k]+'0.5)',
+											},
+									]),
+							},
+						},
+						data: list.item,
+				})
+			})
+
 
 			let option = {
 				tooltip: {
@@ -103,18 +145,11 @@ export default defineComponent({
 					},
 					axisPointer:{
 						type:"shadow",
-					},
-					formatter:(params:any)=>{
-						let item  = params.filter((item:any)=>item.seriesName!='背景')
-						let str = ''
-						item.forEach((item:any) => {
-							str+=item.name+":"+item.value+'\n'
-						});
-						return str
 					}
+					// formatter: function (params){}
 				},
 				legend: {
-					show:false,
+					// data: legendData, //['ff', '联盟广告', '视频广告', '直接访问', '搜索引擎']
 					top: '5%',
 					textStyle:{
 						color:"#A8DFFF"
@@ -131,10 +166,10 @@ export default defineComponent({
 				// 	},
 				// ],
 				grid: {
-					left: '7%',
-					right: '7%',
+					left: '3%',
+					right: '2%',
 					bottom: '2%',
-					top: '2%',
+					top: '12%',
 					containLabel: true,
 
 					// backgroundColor: "rgba(0,0,0,0.2)",
@@ -142,32 +177,36 @@ export default defineComponent({
 				},
 
 				xAxis: {
-					type: 'value',
+					// type: 'category',
 					// boundaryGap: false,
 					axisLabel: {
-						show: false,
+						show: true,
+						rotate: 30,
 						margin: 20,
 						textStyle: {
 							color: '#A8DFFF', //更改坐标轴文字颜色
 							fontSize: 14, //更改坐标轴文字大小
+						},
+						formatter: function (value: any, index: any) {
+							return value.slice(0, 4) + '' + value.slice(4);
+							// var date = new Date(value);
+							// return date.getFullYear()+'\n'+(date.getMonth() + 1)+'-'+date.getDate();
 						},
 					},
 					axisTick: {
 						show: false,
 					},
 					axisLine: {
-						show: false,
+						show: true,
 						lineStyle: {
 							color: 'rgba(38,151,255,.12)',
 						},
-					},
-					splitLine: {
-						show: false,
 					},
 					data: xAxisData,
 				},
-				yAxis: [{
-					type: 'category',
+				yAxis: {
+					// type: 'value',
+					splitNumber: 5,
 					axisLabel: {
 						show: true,
 						textStyle: {
@@ -182,64 +221,13 @@ export default defineComponent({
 						},
 					},
 					splitLine: {
-						show: false,
-						lineStyle: {
-							color: 'rgba(38,151,255,.12)',
-						},
-					},
-        	data: salvProName
-				},{
-					type: 'category',
-					axisLabel: {
 						show: true,
-						textStyle: {
-							color: '#5399AF', //更改坐标轴文字颜色
-							fontSize: 14, //更改坐标轴文字大小
-						},
-					},
-					axisLine: {
-						show: false,
-						lineStyle: {
-							color: 'rgba(18, 81, 115, 0.6)',
-						},
-					},
-					splitLine: {
-						show: false,
 						lineStyle: {
 							color: 'rgba(38,151,255,.12)',
 						},
 					},
-        	data:salvProValue
-				}],
-				series:  [{
-					name: '值',
-					type: 'bar',
-					zlevel: 1,
-					itemStyle: {
-						barBorderRadius: 30,
-						color: new proxy.$echarts.graphic.LinearGradient(0, 1, 1, 0, [{
-								offset: 0,
-								color: 'rgba(0,0,0,0)'
-						}, {
-								offset: 1,
-								color: '#00E8FB'
-						}]),
-					},
-					barWidth: 4,
-					data: salvProValue
-        },
-        {
-					name: '背景',
-					type: 'bar',
-					barWidth: 4,
-					barGap: '-100%',
-					data: salvProMax,
-					itemStyle: {
-						color: '#006A7A',
-						barBorderRadius: 30,
-					},
-        },
-    ],
+				},
+				series: _seriesData,
 			};
 			return option;
 		};

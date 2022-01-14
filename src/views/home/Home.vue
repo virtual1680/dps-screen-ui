@@ -16,6 +16,8 @@ import serveResources from './components/serveResources/index.vue';
 import earlyWarning from './components/earlyWarning/index.vue';
 import warningAbnormal from './components/warningAbnormal/index.vue';
 import workOrderAbbormal from './components/workOrderAbbormal/index.vue';
+import workOrderData from './components/workOrderData/index.vue';
+import warningTrend from './components/warningTrend/index.vue';
 
 import {apiLeftTopTags,apiRightTopTags,apiOrderStatusTrend} from "@/api/home"
 export default defineComponent({
@@ -37,6 +39,8 @@ export default defineComponent({
 		earlyWarning,//预警分布
 		warningAbnormal,//预警异常
 		workOrderAbbormal,//工单故障
+		workOrderData,//工单数据
+		warningTrend,//预警趋势
 	},
 	setup() {
 		let data = reactive({
@@ -130,10 +134,10 @@ export default defineComponent({
 					<warningAbnormal/>
         </div>
         <div style="height: 280px; width: 100%">
-  <ChartBoxTwo type="early" style="height: 100%; width: 100%"/>
+					<warningTrend/>
         </div>
         <div style="height: 306px; width: 100%;">
-          <ChartBoxTwo type="workData" style="height: 100%; width: 100%" />
+					<workOrderData/>
         </div>
       </div>
     </div>

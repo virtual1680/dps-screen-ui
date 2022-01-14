@@ -133,7 +133,7 @@ export default defineComponent({
 					borderColor: '#17D5EB',
 					borderWidth: 1,
 					textStyle: {
-						fontSize: 18,
+						fontSize: 12,
 						color: '#FBFAFB',
 					},
 					axisPointer:{
@@ -253,7 +253,6 @@ export default defineComponent({
     const dynamic = (chart, op:EChartsOption, sec:number)=>{
 			op.currentIndex = -1;
 			const fn = () => {
-				console.log(op.series[0].data.length)
 					let dataLen = op.series[0].data.length;
 					if (dataLen <= 0) return;
 					// 取消之前高亮的图形

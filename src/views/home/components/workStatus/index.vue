@@ -124,7 +124,7 @@ export default defineComponent({
 					borderColor: '#17D5EB',
 					borderWidth: 1,
 					textStyle: {
-						fontSize: 18,
+						fontSize: 12,
 						color: '#FBFAFB',
 					},
 					axisPointer:{
@@ -172,7 +172,7 @@ export default defineComponent({
 							fontSize: 14, //更改坐标轴文字大小
 						},
 						formatter: function (value: any, index: any) {
-							return value.slice(0, 4) + '\n' + value.slice(4);
+							return value.slice(0, 4) + '' + value.slice(4);
 							// var date = new Date(value);
 							// return date.getFullYear()+'\n'+(date.getMonth() + 1)+'-'+date.getDate();
 						},
@@ -244,7 +244,6 @@ export default defineComponent({
     const dynamic = (chart, op:EChartsOption, sec:number)=>{
 			op.currentIndex = -1;
 			const fn = () => {
-				console.log(op.series[0].data.length)
 					let dataLen = op.series[0].data.length;
 					if (dataLen <= 0) return;
 					// 取消之前高亮的图形
