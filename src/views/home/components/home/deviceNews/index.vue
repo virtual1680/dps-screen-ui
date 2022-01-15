@@ -145,6 +145,9 @@ export default defineComponent({
 				legend: {
 					// data: legendData, //['ff', '联盟广告', '视频广告', '直接访问', '搜索引擎']
 					bottom: '10%',
+					left:'6%',
+					right:'12%',
+          type:"scroll",
 					textStyle:{
 						color:"#A8DFFF",
             fontSize:12

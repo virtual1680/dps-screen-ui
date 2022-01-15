@@ -3,20 +3,20 @@ import { defineComponent,onMounted ,reactive} from 'vue';
 import screenHeader from '@components/header/index.vue';
 import EarlyWarningNum from '@/components/earlyWarningNum/main.vue';
 import CensusNum from '@components/censusNum/main.vue';
-import ServeCategory from './components/serveCategory/index.vue';
 
-import WorkStatus from './components/workStatus/index.vue';
-import deviceNews from './components/deviceNews/index.vue';
-import serveNode from './components/serveNode/index.vue';
-import serveResources from './components/serveResources/index.vue';
-import earlyWarning from './components/earlyWarning/index.vue';
-import warningAbnormal from './components/warningAbnormal/index.vue';
-import workOrderAbbormal from './components/workOrderAbbormal/index.vue';
-import workOrderData from './components/workOrderData/index.vue';
-import warningTrend from './components/warningTrend/index.vue';
+import ServeCategory from './components/home/serveCategory/index.vue';
+import WorkStatus from './components/home/workStatus/index.vue';
+import deviceNews from './components/home/deviceNews/index.vue';
+import serveNode from './components/home/serveNode/index.vue';
+import serveResources from './components/home/serveResources/index.vue';
+import earlyWarning from './components/home/earlyWarning/index.vue';
+import warningAbnormal from './components/home/warningAbnormal/index.vue';
+import workOrderAbbormal from './components/home/workOrderAbbormal/index.vue';
+import workOrderData from './components/home/workOrderData/index.vue';
+import warningTrend from './components/home/warningTrend/index.vue';
 
 // 服务器列表
-import serveList from './serveList.vue';
+import serverPage from './serverPage.vue';
 
 import {apiLeftTopTags,apiRightTopTags,apiOrderStatusTrend} from "@/api/home"
 export default defineComponent({
@@ -37,11 +37,11 @@ export default defineComponent({
 		workOrderData,//工单数据
 		warningTrend,//预警趋势
 
-		serveList,
+		serverPage,
 	},
 	setup() {
 		let data = reactive({
-			serverPageShow:false,
+			serverPageShow:true,
 			leftTopData:{},
 			rightTopData:{},
 			orderStatusData:{},
@@ -87,7 +87,15 @@ export default defineComponent({
 			console.log(data.serverPageShow)
 		}
 
-		return { data,openServerPageFun};
+
+		// emit事件监听
+		const closeSpage = (val:string)=>{
+			console.log(val)
+			data.serverPageShow = false
+			console.log(data.serverPageShow)
+		}
+
+		return { data,openServerPageFun,closeSpage};
 	},
 });
 </script>
@@ -145,10 +153,10 @@ export default defineComponent({
         </div>
       </div>
     </div>
-  </div>
-	<serveList :class="['server-page',data.serverPageShow?'fadeIn':'fadeOut']" v-if="data.serverPageShow">
 
-	</serveList>
+  </div>
+	<serverPage @closeServerPage="closeSpage" :class="['server-page',data.serverPageShow?'fadeIn':'fadeOut']" >
+	</serverPage>
 	
 </template>
 
@@ -215,7 +223,7 @@ export default defineComponent({
 	animation-duration: 1s;
 	animation-fill-mode: both;
 	&.fadeIn{
-			animation-name: fadeIn
+		animation-name: zoomIn
 	}
 	&.fadeOut{
 			animation-name: fadeOut

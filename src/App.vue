@@ -25,6 +25,33 @@ body {
 	flex-direction: column;
 }
 
+.el-popper.is-dark{
+	z-index: 98999999999999999 !important;
+}
+
+.el-table--scrollable-y{
+	*::-webkit-scrollbar-thumb {
+			border-radius: 5px;
+			background: #1a95af !important;
+	}
+	*::-webkit-scrollbar-track {
+    background: #03141b !important
+	}
+}
+.el-table__body-wrapper tr td.el-table__fixed-right-patch, 
+.el-table__body-wrapper tr th.el-table__fixed-right-patch, 
+.el-table__footer-wrapper tr td.el-table__fixed-right-patch, 
+.el-table__footer-wrapper tr th.el-table__fixed-right-patch, 
+.el-table__header-wrapper tr td.el-table__fixed-right-patch, 
+.el-table__header-wrapper tr th.el-table__fixed-right-patch{
+	background-color: #000 !important;
+}
+.el-table--border .el-table__inner-wrapper::after, 
+.el-table--border::after, 
+.el-table--border::before,
+.el-table__inner-wrapper::before{
+	display: none;
+}
 
 	@keyframes zoomIn {
 		0% {
