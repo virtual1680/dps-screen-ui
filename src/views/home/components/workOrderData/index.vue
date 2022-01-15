@@ -34,7 +34,7 @@ export default defineComponent({
 		let { proxy } = getCurrentInstance() as any;
 		let chart: any = null;
 		let option: object = {};
-		let dataZoomLength = 7;
+		let dataZoomLength = 10;
 		let dataZoomTime = 3000;
 		let zoomLoop: any = null;
 
@@ -82,8 +82,8 @@ export default defineComponent({
 			chart.clear();
 			let _option = getOption();
 			chart.setOption(_option);
-			// updateChart(_option as EChartsOption);
-      dynamic(chart, _option as EChartsOption,5000);
+			updateChart(_option as EChartsOption);
+      dynamic(chart, _option as EChartsOption,2000);
 		};
 
 
@@ -156,15 +156,15 @@ export default defineComponent({
 					}
 
 				},
-				// dataZoom: [
-				// 	{
-				// 		xAxisIndex: 0, //这里是从X轴的0刻度开始
-				// 		show: false, //是否显示滑动条，不影响使用
-				// 		type: 'slider', // 这个 dataZoom 组件是 slider 型 dataZoom 组件
-				// 		startValue: 0, // 从头开始。
-				// 		endValue: dataZoomLength, // 一次性展示6个。
-				// 	},
-				// ],
+				dataZoom: [
+					{
+						xAxisIndex: 0, //这里是从X轴的0刻度开始
+						show: false, //是否显示滑动条，不影响使用
+						type: 'slider', // 这个 dataZoom 组件是 slider 型 dataZoom 组件
+						startValue: 0, // 从头开始。
+						endValue: dataZoomLength, // 一次性展示6个。
+					},
+				],
 				grid: {
 					left: '3%',
 					right: '2%',

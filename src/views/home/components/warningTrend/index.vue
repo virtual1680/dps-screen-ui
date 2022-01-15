@@ -33,7 +33,7 @@ export default defineComponent({
 		let { proxy } = getCurrentInstance() as any;
 		let chart: any = null;
 		let option: object = {};
-		let dataZoomLength = 7;
+		let dataZoomLength = 10;
 		let dataZoomTime = 6000;
 		let zoomLoop: any = null;
 

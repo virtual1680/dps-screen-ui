@@ -1,12 +1,8 @@
 <script lang="ts">
 import { defineComponent,onMounted ,reactive} from 'vue';
 import screenHeader from '@components/header/index.vue';
-import workOrderStatus from './components/workOrderStatus.vue';
 import EarlyWarningNum from '@/components/earlyWarningNum/main.vue';
-import ChartBox from '@components/chartBoxOne/main.vue';
 import CensusNum from '@components/censusNum/main.vue';
-import ChartBoxTwo from '@components/chartBoxTwo/main.vue';
-import ServeSource from './components/serveSource/index.vue';
 import ServeCategory from './components/serveCategory/index.vue';
 
 import WorkStatus from './components/workStatus/index.vue';
@@ -19,19 +15,18 @@ import workOrderAbbormal from './components/workOrderAbbormal/index.vue';
 import workOrderData from './components/workOrderData/index.vue';
 import warningTrend from './components/warningTrend/index.vue';
 
+// 服务器列表
+import serveList from './serveList.vue';
+
 import {apiLeftTopTags,apiRightTopTags,apiOrderStatusTrend} from "@/api/home"
 export default defineComponent({
 	name: 'home',
 	components: {
 		screenHeader,
-		workOrderStatus,
 		EarlyWarningNum,
-		ChartBox,
 		CensusNum,
-		ChartBoxTwo,
-		ServeSource,
-		ServeCategory,//服务器分类
 
+		ServeCategory,//服务器分类
 		WorkStatus,
 		deviceNews,//设备信息
 		serveNode,//服务器节点
@@ -41,9 +36,12 @@ export default defineComponent({
 		workOrderAbbormal,//工单故障
 		workOrderData,//工单数据
 		warningTrend,//预警趋势
+
+		serveList,
 	},
 	setup() {
 		let data = reactive({
+			serverPageShow:false,
 			leftTopData:{},
 			rightTopData:{},
 			orderStatusData:{},
@@ -53,6 +51,7 @@ export default defineComponent({
 		onMounted(() => {
 			init();
 		});
+
 
 		const init = () => {
 			getLeftTopData();
@@ -82,13 +81,19 @@ export default defineComponent({
 			})
 		}
 
-		return { data};
+		// 打开服务器列表页
+		const openServerPageFun = ()=>{
+			data.serverPageShow = true
+			console.log(data.serverPageShow)
+		}
+
+		return { data,openServerPageFun};
 	},
 });
 </script>
 
 <template>
-  <div class="container">
+  <div class="container" @click="openServerPageFun" >
     <screenHeader />
     <div class="content">
       <div class="left-container">
@@ -120,7 +125,6 @@ export default defineComponent({
             <WorkStatus :chartData="data.orderStatusData"/>
           </div>
         </div>
-        <!-- <workOrderStatus style="height: 370px" /> -->
       </div>
       <div class="right-container flex-jc-cb flex-d-c">
         <div class="early-list flex-jc-cb">
@@ -142,6 +146,10 @@ export default defineComponent({
       </div>
     </div>
   </div>
+	<serveList :class="['server-page',data.serverPageShow?'fadeIn':'fadeOut']" v-if="data.serverPageShow">
+
+	</serveList>
+	
 </template>
 
 
@@ -197,6 +205,21 @@ export default defineComponent({
 			height: 253px;
 			width: 100%;
 		}
+	}
+}
+.server-page{
+	position:fixed;
+	left:0;
+	top:0;
+	z-index: 9999999;
+	animation-duration: 1s;
+	animation-fill-mode: both;
+	&.fadeIn{
+			animation-name: fadeIn
+	}
+	&.fadeOut{
+			animation-name: fadeOut
+
 	}
 }
 </style>

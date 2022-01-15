@@ -33,7 +33,7 @@ export default defineComponent({
 		let { proxy } = getCurrentInstance() as any;
 		let chart: any = null;
 		let option: object = {};
-		let dataZoomLength = 7;
+		let dataZoomLength = 8;
 		let dataZoomTime = 3000;
 		let zoomLoop: any = null;
 		let xAxisData: any = [];
@@ -69,27 +69,29 @@ export default defineComponent({
 			chart.clear();
 			let _option = getOption();
 			chart.setOption(_option);
-			// updateChart(_option as EChartsOption);
-      dynamic(chart, _option as EChartsOption,5000);
+			updateChart(_option as EChartsOption);
+      dynamic(chart, _option as EChartsOption,2000);
 		};
 		const getOption = () => {
-			let _areaColor = ['#00C7E7', '#00D4D3', '#FFFFFF'];
+			let _areaColor = ['#00C7E7', '#00D4D3', '#FFFFFF','#eb2100', '#eb3600', '#d0570e', '#d0a00e', '#34da62', '#00e9db', '#00c0e9', '#0096f3', '#33CCFF', '#33FFCC'];
 			let chartData = props.chartData as any
 
 
 			xAxisData = chartData.list.map((item:any) => item.name)
 
-			let legendData = chartData.title
 
 			let _seriesData: any = [];
 			// type  value date
-			chartData.list.forEach((data:any, index:number) => {
+			chartData.title.forEach((name:any,i:number) => {
 				let _aData:any = []
-				chartData.title.forEach((m:any,i:number) => {
+				chartData.list.forEach((data:any, index:number) => {
+					
 					_aData.push(data.item[i])
-				});
+
+				})
+
 				_seriesData.push({
-					name: legendData[index],
+					name: name,
 					type: 'bar',
 					// color: _areaColor[index],
 					barWidth:8,
@@ -98,7 +100,7 @@ export default defineComponent({
             normal: {
                 color: new proxy.$echarts.graphic.LinearGradient(0, 0, 0, 1, [{
                     offset: 0,
-                    color: _areaColor[index]
+                    color: _areaColor[i]
                 }, {
                     offset: 1,
                     color: 'rgba(0,0,0,0)'
@@ -112,6 +114,17 @@ export default defineComponent({
 						return idx * 10;
 					},
 					data: _aData,
+				});
+
+
+
+			});
+
+
+			chartData.list.forEach((data:any, index:number) => {
+				let _aData:any = []
+				chartData.title.forEach((m:any,i:number) => {
+					_aData.push(data.item[i])
 				});
 			});
 			console.log(new Date().getTime());
@@ -133,22 +146,22 @@ export default defineComponent({
 					// formatter: function (params){}
 				},
 				legend: {
-					data: legendData, //['ff', '联盟广告', '视频广告', '直接访问', '搜索引擎']
+					// data: legendData, //['ff', '联盟广告', '视频广告', '直接访问', '搜索引擎']
 					top: '5%',
 					textStyle:{
 						color:"#A8DFFF"
 					}
 
 				},
-				// dataZoom: [
-				// 	{
-				// 		xAxisIndex: 0, //这里是从X轴的0刻度开始
-				// 		show: false, //是否显示滑动条，不影响使用
-				// 		type: 'slider', // 这个 dataZoom 组件是 slider 型 dataZoom 组件
-				// 		startValue: 0, // 从头开始。
-				// 		endValue: dataZoomLength, // 一次性展示6个。
-				// 	},
-				// ],
+				dataZoom: [
+					{
+						xAxisIndex: 0, //这里是从X轴的0刻度开始
+						show: false, //是否显示滑动条，不影响使用
+						type: 'slider', // 这个 dataZoom 组件是 slider 型 dataZoom 组件
+						startValue: 0, // 从头开始。
+						endValue: dataZoomLength, // 一次性展示6个。
+					},
+				],
 				grid: {
 					left: '3%',
 					right: '2%',
