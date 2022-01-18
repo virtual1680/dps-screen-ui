@@ -73,19 +73,19 @@ export default defineComponent({
 							color: _areaColor[k] + '1)',
 							width: 2,
 						},
-						areaStyle: {
-							//区域填充样式
-							color: new proxy.$echarts.graphic.LinearGradient(0, 1, 0, 0, [
-								{
-									offset: 0,
-									color: _areaColor[k] + ' 0.1)',
-								},
-								{
-									offset: 1,
-									color: _areaColor[k] + '0.5)',
-								},
-							]),
-						},
+					},
+					areaStyle: {
+						//区域填充样式
+						color: new proxy.$echarts.graphic.LinearGradient(0, 1, 0, 0, [
+							{
+								offset: 0,
+								color: _areaColor[k] + ' 0.1)',
+							},
+							{
+								offset: 1,
+								color: _areaColor[k] + '0.5)',
+							},
+						]),
 					},
 					data: list.value,
 				});

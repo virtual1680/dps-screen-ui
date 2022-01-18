@@ -15,7 +15,7 @@
 // 第三级弹窗 左边 box
 import { defineComponent, reactive } from 'vue';
 enum SChartType {
-	hardware = 'hardware',
+	diskUsage = 'diskUsage',
 	cpu = 'cpu',
 	performance = 'performance',
 	disk = 'disk',
@@ -26,13 +26,13 @@ export default defineComponent({
 	props: {
 		type: {
 			type: String,
-			default: SChartType.hardware,
+			default: SChartType.diskUsage,
 		},
 	},
 	setup() {
 		let data = reactive({
-			hardware: {
-				title: '硬件健康',
+			diskUsage: {
+				title: '磁盘使用率',
 				bg: new URL('./img/hardware-bg.png', import.meta.url).href,
 			},
 			cpu: {

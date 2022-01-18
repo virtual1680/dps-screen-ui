@@ -6,7 +6,7 @@ import {
 	onMounted,
 	reactive,
 } from 'vue';
-import hardwareHealthy from './components/hardwareHealthy.vue';
+import diskUsage from './components/diskUsage.vue';
 import cpu from './components/cpu.vue';
 import performance from './components/performance.vue';
 import diskr from './components/disk-remove.vue';
@@ -20,7 +20,7 @@ import { apiServerInfo } from '@/api/serverDetail';
 export default defineComponent({
 	name: 'serverDetail',
 	components: {
-		hardwareHealthy,
+		diskUsage,
 		cpu,
 		performance,
 		diskr,
@@ -40,12 +40,14 @@ export default defineComponent({
 			internet: {},
 			iops: {},
 			disk: {},
+			diskUsage: 0,
+			memoryUsage: 0,
+			cpuUsage: 0,
 		});
 
 		onMounted(() => {
 			let params = { provider: '', publicIp: '10.10.1.32', ip: '10.10.1.32' };
 			apiServerInfo(params).then(res => {
-				console.log('-=-=-=-=-=', res.data.process);
 				const title = res.data.date;
 				//进程占比
 				data.performance = res.data.process;
@@ -59,6 +61,12 @@ export default defineComponent({
 				data.iops = { list: res.data.cloudDiskIOPS, title };
 				//磁盘读写
 				data.disk = { list: res.data.cloudDisk, title };
+				//磁盘使用
+				data.diskUsage = res.data.diskUsageNow;
+				//内存使用
+				data.memoryUsage = res.data.memoryUsageNow;
+				//cpu使用
+				data.cpuUsage = res.data.cpuUsageNow;
 			});
 		});
 
@@ -82,12 +90,12 @@ export default defineComponent({
 		<div class="list_container">
 			<div class="left_box flex-jc-cb flex-d-c">
 				<div class="left-item flex-jc-cb">
-					<hardwareHealthy />
-					<cpu />
+					<diskUsage :data="data.diskUsage" />
+					<cpu :data="data.cpuUsage" />
 				</div>
 				<div class="left-item flex-jc-cb">
 					<performance :data="data.performance" />
-					<diskr />
+					<diskr :data="data.memoryUsage" />
 				</div>
 				<div class="left-item">
 					<read :data="data.usage" />

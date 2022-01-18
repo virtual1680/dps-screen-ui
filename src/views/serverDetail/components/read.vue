@@ -1,6 +1,6 @@
 <script lang="ts">
 import ChartBox from '@components/chartBoxThree/main.vue';
-import { defineComponent, onMounted, reactive, ref, getCurrentInstance, toRefs, watch } from 'vue';
+import { defineComponent, onMounted, ref, getCurrentInstance, watch } from 'vue';
 import { EChartsOption, DataZoomComponentOption } from 'echarts';
 interface DataItem {
 	name: string;
@@ -54,16 +54,7 @@ export default defineComponent({
 		};
 
 		const getOption = () => {
-			let _areaColor = [
-				'rgba(11, 154, 168,',
-				'rgba(0, 228, 255,',
-				'rgba(255, 141, 68,',
-				'rgba(241, 94, 94, ',
-				'rgba(51, 63, 255,',
-				'rgba(255, 225, 255,',
-				'rgba(255, 255, 255,',
-			];
-			xAxisData = echartData.date;
+			let _areaColor = ['rgba(255, 141, 68,', 'rgba(0, 189, 255,', 'rgba(225, 245, 255,'];
 
 			let _seriesData: any = [];
 
@@ -71,26 +62,13 @@ export default defineComponent({
 				_seriesData.push({
 					name: item.name,
 					type: 'line',
-					symbol: 'none',
+					symbol: 'circle',
 					itemStyle: {
 						color: _areaColor[k] + '1)',
-						lineStyle: {
-							color: _areaColor[k] + '1)',
-							width: 2,
-						},
-						areaStyle: {
-							//区域填充样式
-							color: new proxy.$echarts.graphic.LinearGradient(0, 1, 0, 0, [
-								{
-									offset: 0,
-									color: _areaColor[k] + ' 0.1)',
-								},
-								{
-									offset: 1,
-									color: _areaColor[k] + '0.5)',
-								},
-							]),
-						},
+					},
+					lineStyle: {
+						color: _areaColor[k] + '1)',
+						width: 2,
 					},
 					data: item.value,
 				});
@@ -114,7 +92,6 @@ export default defineComponent({
 					// formatter: function (params){}
 				},
 				legend: {
-					// data: legendData, //['ff', '联盟广告', '视频广告', '直接访问', '搜索引擎']
 					top: '5%',
 					textStyle: {
 						color: '#A8DFFF',
@@ -145,17 +122,11 @@ export default defineComponent({
 					// boundaryGap: false,
 					axisLabel: {
 						show: true,
-						rotate: 30,
 						margin: 20,
 						textStyle: {
 							color: '#A8DFFF', //更改坐标轴文字颜色
 							fontSize: 14, //更改坐标轴文字大小
 						},
-						// formatter: function (value: any, index: any) {
-						// 	return value.slice(0, 4) + '' + value.slice(4);
-						// 	// var date = new Date(value);
-						// 	// return date.getFullYear()+'\n'+(date.getMonth() + 1)+'-'+date.getDate();
-						// },
 					},
 					axisTick: {
 						show: false,
@@ -260,14 +231,7 @@ export default defineComponent({
 
 <template>
 	<ChartBox type="read" style="width: 840px; height: 350px">
-		<div class="header">
-			<div class="item selected">CPU</div>
-			<div class="item unselect">内存</div>
-			<div class="item unselect">ID读写</div>
-		</div>
-		<div style="height: 296px; width: 100%">
-			<div class="chart" ref="lineChart"></div>
-		</div>
+		<div class="chart" ref="lineChart"></div>
 	</ChartBox>
 </template>
 
