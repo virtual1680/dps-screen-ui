@@ -1,13 +1,9 @@
 <script lang="ts">
-import ChartBox from '@components/chartBoxThree/main.vue';
+import ChartBox from '@components/chartBoxFour/main.vue';
 import { defineComponent, onMounted, reactive, ref, getCurrentInstance, toRefs, watch } from 'vue';
 import { EChartsOption, DataZoomComponentOption } from 'echarts';
-interface DataItem {
-	name: string;
-	value: string[];
-}
 export default defineComponent({
-	name: 'home',
+	name: 'broadband',
 	components: { ChartBox },
 	props: { data: Object },
 	setup(props) {
@@ -20,7 +16,13 @@ export default defineComponent({
 		let zoomLoop: any = null;
 
 		let xAxisData: any = [];
-		let echartData: any = []; //title usage
+		let echartData: any = [];
+
+		const initChart = () => {
+			//使用主题初始化
+			let dom = lineChart.value;
+			chart = proxy.$echarts.init(dom);
+		};
 
 		watch(
 			() => props.data,
@@ -30,11 +32,6 @@ export default defineComponent({
 				chartAnim();
 			},
 		);
-		//使用主题初始化
-		const initChart = () => {
-			const dom = lineChart.value;
-			chart = proxy.$echarts.init(dom);
-		};
 
 		onMounted(() => {
 			initChart();
@@ -63,13 +60,11 @@ export default defineComponent({
 				'rgba(255, 225, 255,',
 				'rgba(255, 255, 255,',
 			];
-			xAxisData = echartData.date;
-
 			let _seriesData: any = [];
 
-			echartData.forEach((item: DataItem, k: number) => {
+			echartData.forEach((list: any, k: number) => {
 				_seriesData.push({
-					name: item.name,
+					name: list.name,
 					type: 'line',
 					symbol: 'none',
 					itemStyle: {
@@ -92,7 +87,7 @@ export default defineComponent({
 							]),
 						},
 					},
-					data: item.value,
+					data: list.value,
 				});
 			});
 
@@ -111,10 +106,8 @@ export default defineComponent({
 					axisPointer: {
 						type: 'shadow',
 					},
-					// formatter: function (params){}
 				},
 				legend: {
-					// data: legendData, //['ff', '联盟广告', '视频广告', '直接访问', '搜索引擎']
 					top: '5%',
 					textStyle: {
 						color: '#A8DFFF',
@@ -135,14 +128,8 @@ export default defineComponent({
 					bottom: '2%',
 					top: '12%',
 					containLabel: true,
-
-					// backgroundColor: "rgba(0,0,0,0.2)",
-					// borderWidth: 0
 				},
-
 				xAxis: {
-					// type: 'category',
-					// boundaryGap: false,
 					axisLabel: {
 						show: true,
 						rotate: 30,
@@ -151,11 +138,11 @@ export default defineComponent({
 							color: '#A8DFFF', //更改坐标轴文字颜色
 							fontSize: 14, //更改坐标轴文字大小
 						},
-						// formatter: function (value: any, index: any) {
-						// 	return value.slice(0, 4) + '' + value.slice(4);
-						// 	// var date = new Date(value);
-						// 	// return date.getFullYear()+'\n'+(date.getMonth() + 1)+'-'+date.getDate();
-						// },
+						formatter: function (value: any, index: any) {
+							return value.slice(0, 4) + '' + value.slice(4);
+							// var date = new Date(value);
+							// return date.getFullYear()+'\n'+(date.getMonth() + 1)+'-'+date.getDate();
+						},
 					},
 					axisTick: {
 						show: false,
@@ -259,45 +246,12 @@ export default defineComponent({
 </script>
 
 <template>
-	<ChartBox type="read" style="width: 840px; height: 350px">
-		<div class="header">
-			<div class="item selected">CPU</div>
-			<div class="item unselect">内存</div>
-			<div class="item unselect">ID读写</div>
-		</div>
-		<div style="height: 296px; width: 100%">
-			<div class="chart" ref="lineChart"></div>
-		</div>
+	<ChartBox type="exampleIops" style="width: 460px; height: 446px">
+		<div class="chart" ref="lineChart"></div>
 	</ChartBox>
 </template>
 
 <style lang="scss" scoped>
-.header {
-	display: flex;
-	align-items: center;
-	padding: 15px;
-	font-size: 12px;
-	justify-content: flex-end;
-	.item {
-		margin-right: 5px;
-		width: 64px;
-		height: 24px;
-		line-height: 24px;
-		text-align: center;
-		cursor: pointer;
-		&.selected {
-			background: url('../../../assets/serverDetail/selected.png') no-repeat;
-			background-size: 100% 100%;
-			font-family: PingFangSC-Regular, PingFang SC;
-			color: #ffffff;
-		}
-		&.unselect {
-			background: url('../../../assets/serverDetail/unselect.png') no-repeat;
-			background-size: 100% 100%;
-			color: #8de6f8;
-		}
-	}
-}
 .chart {
 	width: 100%;
 	height: 100%;

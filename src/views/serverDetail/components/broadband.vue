@@ -2,16 +2,15 @@
 import ChartBox from '@components/chartBoxFour/main.vue';
 import { defineComponent, onMounted, reactive, ref, getCurrentInstance, toRefs, watch } from 'vue';
 import { EChartsOption, DataZoomComponentOption } from 'echarts';
-import { apiOrderTypeTrend } from '@/api/home';
 export default defineComponent({
-	name: 'home',
+	name: 'broadband',
 	components: { ChartBox },
+	props: { data: Object },
 	setup(props) {
 		let timer: any = null;
 		let lineChart = ref(null);
 		let { proxy } = getCurrentInstance() as any;
 		let chart: any = null;
-		let option: object = {};
 		let dataZoomLength = 10;
 		let dataZoomTime = 3000;
 		let zoomLoop: any = null;
@@ -26,31 +25,21 @@ export default defineComponent({
 		};
 
 		watch(
-			() => props.chartData,
-			(newVal, oldVal) => {},
+			() => props.data,
+			n => {
+				echartData = n?.list;
+				xAxisData = n?.title;
+				chartAnim();
+			},
 		);
 
-		const init = async () => {
-			await getData();
-			initChart();
-			chartAnim();
-		};
-
 		onMounted(() => {
-			init();
+			initChart();
 			window.addEventListener('resize', function () {
 				// 让我们的图表调用 resize这个方法
 				chart && chart.resize();
 			});
 		});
-		// 获取数据
-		const getData = async () => {
-			await apiOrderTypeTrend().then(res => {
-				let data = res.data;
-				echartData = data;
-				console.log('))))))', echartData);
-			});
-		};
 
 		const chartAnim = () => {
 			zoomLoop && clearTimeout(zoomLoop);
@@ -71,11 +60,9 @@ export default defineComponent({
 				'rgba(255, 225, 255,',
 				'rgba(255, 255, 255,',
 			];
-			xAxisData = echartData.date;
-
 			let _seriesData: any = [];
 
-			echartData.list.forEach((list: any, k: number) => {
+			echartData.forEach((list: any, k: number) => {
 				_seriesData.push({
 					name: list.name,
 					type: 'line',
@@ -100,7 +87,7 @@ export default defineComponent({
 							]),
 						},
 					},
-					data: list.item,
+					data: list.value,
 				});
 			});
 
@@ -119,10 +106,8 @@ export default defineComponent({
 					axisPointer: {
 						type: 'shadow',
 					},
-					// formatter: function (params){}
 				},
 				legend: {
-					// data: legendData, //['ff', '联盟广告', '视频广告', '直接访问', '搜索引擎']
 					top: '5%',
 					textStyle: {
 						color: '#A8DFFF',
@@ -143,14 +128,8 @@ export default defineComponent({
 					bottom: '2%',
 					top: '12%',
 					containLabel: true,
-
-					// backgroundColor: "rgba(0,0,0,0.2)",
-					// borderWidth: 0
 				},
-
 				xAxis: {
-					// type: 'category',
-					// boundaryGap: false,
 					axisLabel: {
 						show: true,
 						rotate: 30,

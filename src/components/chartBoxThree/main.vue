@@ -40,7 +40,7 @@ export default defineComponent({
 				bg: new URL('./img/cpu-bg.png', import.meta.url).href,
 			},
 			performance: {
-				title: '资源占比',
+				title: '进程占比',
 				bg: new URL('./img/performance-bg.png', import.meta.url).href,
 			},
 			disk: {
@@ -48,7 +48,7 @@ export default defineComponent({
 				bg: new URL('./img/disk-bg.png', import.meta.url).href,
 			},
 			read: {
-				title: '性能概况',
+				title: '当前进程',
 				bg: new URL('./img/read-bg.png', import.meta.url).href,
 			},
 		});

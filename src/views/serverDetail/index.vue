@@ -9,30 +9,57 @@ import {
 import hardwareHealthy from './components/hardwareHealthy.vue';
 import cpu from './components/cpu.vue';
 import performance from './components/performance.vue';
-import disk from './components/disk.vue';
+import diskr from './components/disk-remove.vue';
 import read from './components/read.vue';
 
 import broadband from './components/broadband.vue';
-
+import ecs from './components/ecs.vue';
+import iops from './components/iops.vue';
+import disk from './components/disk.vue';
+import { apiServerInfo } from '@/api/serverDetail';
 export default defineComponent({
 	name: 'serverDetail',
 	components: {
 		hardwareHealthy,
 		cpu,
 		performance,
-		disk,
+		diskr,
 		read,
 		broadband,
+		ecs,
+		iops,
+		disk,
 	},
 	setup(props, { emit }) {
 		let { proxy } = getCurrentInstance() as ComponentInternalInstance;
 
 		let data = reactive({
-			tableData: [],
+			performance: {},
+			usage: {},
+			ecs: {},
+			internet: {},
+			iops: {},
+			disk: {},
 		});
 
 		onMounted(() => {
-			// (proxy?.$echarts as any).init();
+			let params = { provider: '', publicIp: '10.10.1.32', ip: '10.10.1.32' };
+			apiServerInfo(params).then(res => {
+				console.log('-=-=-=-=-=', res.data.process);
+				const title = res.data.date;
+				//进程占比
+				data.performance = res.data.process;
+				//当前进程
+				data.usage = { list: res.data.usage, title };
+				//ecs 连接数
+				data.ecs = { list: res.data.esConnectNum, title };
+				// 内网宽带
+				data.internet = { list: res.data.internet, title };
+				//实例IOPS
+				data.iops = { list: res.data.cloudDiskIOPS, title };
+				//磁盘读写
+				data.disk = { list: res.data.cloudDisk, title };
+			});
 		});
 
 		const closeServerListPage = () => {
@@ -59,21 +86,21 @@ export default defineComponent({
 					<cpu />
 				</div>
 				<div class="left-item flex-jc-cb">
-					<performance />
-					<disk />
+					<performance :data="data.performance" />
+					<diskr />
 				</div>
 				<div class="left-item">
-					<read />
+					<read :data="data.usage" />
 				</div>
 			</div>
 			<div class="right_box flex-jc-cb flex-d-c">
 				<div class="right-item flex-jc-cb">
-					<broadband />
-					<broadband />
+					<broadband :data="data.internet" />
+					<iops :data="data.iops" />
 				</div>
 				<div class="right-item flex-jc-cb">
-					<broadband />
-					<broadband />
+					<ecs :data="data.ecs" />
+					<disk :data="data.disk" />
 				</div>
 			</div>
 		</div>
