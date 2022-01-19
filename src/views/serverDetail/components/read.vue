@@ -1,7 +1,8 @@
 <script lang="ts">
 import ChartBox from '@components/chartBoxThree/main.vue';
-import { defineComponent, onMounted, ref, getCurrentInstance, watch } from 'vue';
-import { EChartsOption, DataZoomComponentOption } from 'echarts';
+import { defineComponent, onMounted, ref, watch } from 'vue';
+import { EChartsOption, EChartOption } from 'echarts';
+import { dynamic, updateChart, initChart } from '@/serve/echartsCommon';
 interface DataItem {
 	name: string;
 	value: string[];
@@ -13,7 +14,6 @@ export default defineComponent({
 	setup(props) {
 		let timer: any = null;
 		let lineChart = ref(null);
-		let { proxy } = getCurrentInstance() as any;
 		let chart: any = null;
 		let dataZoomLength = 10;
 		let dataZoomTime = 3000;
@@ -30,46 +30,37 @@ export default defineComponent({
 				chartAnim();
 			},
 		);
-		//使用主题初始化
-		const initChart = () => {
-			const dom = lineChart.value;
-			chart = proxy.$echarts.init(dom);
-		};
-
 		onMounted(() => {
-			initChart();
-			window.addEventListener('resize', function () {
-				// 让我们的图表调用 resize这个方法
-				chart && chart.resize();
-			});
+			chart = initChart(chart, lineChart);
 		});
 
 		const chartAnim = () => {
 			zoomLoop && clearTimeout(zoomLoop);
-			chart.clear();
+			chart?.clear();
 			let _option = getOption();
-			chart.setOption(_option);
-			updateChart(_option as EChartsOption);
-			dynamic(chart, _option as EChartsOption, 2000);
+			chart?.setOption(_option as EChartOption);
+			updateChart(
+				chart,
+				_option as EChartsOption,
+				xAxisData,
+				dataZoomLength,
+				zoomLoop,
+				dataZoomTime,
+			);
+			dynamic(timer, chart, _option as EChartsOption, 2000);
 		};
 
 		const getOption = () => {
 			let _areaColor = ['rgba(255, 141, 68,', 'rgba(0, 189, 255,', 'rgba(225, 245, 255,'];
-
 			let _seriesData: any = [];
-
 			echartData.forEach((item: DataItem, k: number) => {
 				_seriesData.push({
 					name: item.name,
+					zlevel: k,
 					type: 'line',
 					symbol: 'circle',
-					itemStyle: {
-						color: _areaColor[k] + '1)',
-					},
-					lineStyle: {
-						color: _areaColor[k] + '1)',
-						width: 2,
-					},
+					itemStyle: { color: _areaColor[k] + '1)' },
+					lineStyle: { color: _areaColor[k] + '1)', width: 2 },
 					data: item.value,
 				});
 			});
@@ -116,7 +107,6 @@ export default defineComponent({
 					// backgroundColor: "rgba(0,0,0,0.2)",
 					// borderWidth: 0
 				},
-
 				xAxis: {
 					// type: 'category',
 					// boundaryGap: false,
@@ -166,61 +156,6 @@ export default defineComponent({
 			};
 			return option;
 		};
-		// 当 line  bar 数据过多是启动轮询
-		const updateChart = (option: EChartsOption) => {
-			let xAxisName = xAxisData;
-
-			let fn = () => {
-				if (xAxisName.length <= dataZoomLength + 1) {
-					zoomLoop && clearTimeout(zoomLoop);
-					return;
-				}
-				// 每次向后滚动一个，最后一个从头开始。
-				let zoom = option.dataZoom as DataZoomComponentOption[];
-				if ((zoom[0].endValue as number) >= xAxisName.length - 1) {
-					option.dataZoom[0].endValue = dataZoomLength;
-					option.dataZoom[0].startValue = 0;
-				} else {
-					option.dataZoom[0].endValue = option.dataZoom[0].endValue + 1;
-					option.dataZoom[0].startValue = option.dataZoom[0].startValue + 1;
-				}
-				chart.setOption(option);
-				zoomLoop && clearTimeout(zoomLoop);
-				zoomLoop = setTimeout(fn, dataZoomTime);
-			};
-			// 启动
-			setTimeout(fn, dataZoomTime);
-		};
-		// tooltip自动轮询
-		const dynamic = (chart, op: EChartsOption, sec: number) => {
-			op.currentIndex = -1;
-			const fn = () => {
-				let dataLen = op.series[0].data.length;
-				if (dataLen <= 0) return;
-				// 取消之前高亮的图形
-				chart.dispatchAction({
-					type: 'downplay',
-					seriesIndex: 0,
-					dataIndex: op.currentIndex,
-				});
-				op.currentIndex = (op.currentIndex + 1) % dataLen;
-				// 高亮当前图形
-				chart.dispatchAction({
-					type: 'highlight',
-					seriesIndex: 0,
-					dataIndex: op.currentIndex,
-				});
-				// 显示 tooltip
-				chart.dispatchAction({
-					type: 'showTip',
-					seriesIndex: 0,
-					dataIndex: op.currentIndex,
-				});
-				timer && clearTimeout(timer);
-				timer = setTimeout(fn, sec);
-			};
-			timer = setTimeout(fn, sec);
-		};
 
 		return {
 			lineChart,
@@ -236,32 +171,6 @@ export default defineComponent({
 </template>
 
 <style lang="scss" scoped>
-.header {
-	display: flex;
-	align-items: center;
-	padding: 15px;
-	font-size: 12px;
-	justify-content: flex-end;
-	.item {
-		margin-right: 5px;
-		width: 64px;
-		height: 24px;
-		line-height: 24px;
-		text-align: center;
-		cursor: pointer;
-		&.selected {
-			background: url('../../../assets/serverDetail/selected.png') no-repeat;
-			background-size: 100% 100%;
-			font-family: PingFangSC-Regular, PingFang SC;
-			color: #ffffff;
-		}
-		&.unselect {
-			background: url('../../../assets/serverDetail/unselect.png') no-repeat;
-			background-size: 100% 100%;
-			color: #8de6f8;
-		}
-	}
-}
 .chart {
 	width: 100%;
 	height: 100%;

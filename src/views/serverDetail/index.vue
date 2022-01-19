@@ -1,15 +1,9 @@
 <script lang="ts">
-import {
-	defineComponent,
-	getCurrentInstance,
-	ComponentInternalInstance,
-	onMounted,
-	reactive,
-} from 'vue';
+import { defineComponent, onMounted, reactive } from 'vue';
 import diskUsage from './components/diskUsage.vue';
-import cpu from './components/cpu.vue';
+import cpuUsage from './components/cpuUsage.vue';
 import performance from './components/performance.vue';
-import diskr from './components/disk-remove.vue';
+import memoryUsage from './components/memoryUsage.vue';
 import read from './components/read.vue';
 
 import broadband from './components/broadband.vue';
@@ -21,9 +15,9 @@ export default defineComponent({
 	name: 'serverDetail',
 	components: {
 		diskUsage,
-		cpu,
+		cpuUsage,
 		performance,
-		diskr,
+		memoryUsage,
 		read,
 		broadband,
 		ecs,
@@ -31,8 +25,6 @@ export default defineComponent({
 		disk,
 	},
 	setup(props, { emit }) {
-		let { proxy } = getCurrentInstance() as ComponentInternalInstance;
-
 		let data = reactive({
 			performance: {},
 			usage: {},
@@ -91,11 +83,11 @@ export default defineComponent({
 			<div class="left_box flex-jc-cb flex-d-c">
 				<div class="left-item flex-jc-cb">
 					<diskUsage :data="data.diskUsage" />
-					<cpu :data="data.cpuUsage" />
+					<cpuUsage :data="data.cpuUsage" />
 				</div>
 				<div class="left-item flex-jc-cb">
 					<performance :data="data.performance" />
-					<diskr :data="data.memoryUsage" />
+					<memoryUsage :data="data.memoryUsage" />
 				</div>
 				<div class="left-item">
 					<read :data="data.usage" />

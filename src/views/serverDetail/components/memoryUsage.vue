@@ -1,17 +1,18 @@
 <template>
-	<ChartBox type="diskUsage" style="width: 410px; height: 303px">
+	<ChartBox type="memory" style="width: 410px; height: 303px">
 		<div class="chart" ref="lineChart"></div>
 	</ChartBox>
 </template>
 <script lang="ts">
-// 磁盘使用
+// 内存使用
 import ChartBox from '@components/chartBoxThree/main.vue';
 import { defineComponent, onMounted, ref, watch } from 'vue';
 import { ECharts } from 'echarts';
-import { initChart } from '@/serve/echartsCommon';
+import { initChart, getInstance } from '@/serve/echartsCommon';
 export default defineComponent({
-	name: 'diskUsage',
+	name: 'memoryUsage',
 	props: {
+		content: String,
 		data: {
 			type: Number,
 			default: 0,
@@ -20,8 +21,14 @@ export default defineComponent({
 	components: { ChartBox },
 	setup(props) {
 		let lineChart = ref(null);
+		let { proxy } = getInstance();
 		let chart: ECharts | null = null;
 
+		const chartAnim = () => {
+			chart?.clear();
+			let _option = getOption();
+			chart?.setOption(_option);
+		};
 		watch(
 			() => props.data,
 			() => {
@@ -31,47 +38,45 @@ export default defineComponent({
 		onMounted(() => {
 			chart = initChart(chart, lineChart);
 		});
-		const chartAnim = () => {
-			chart?.clear();
-			let _option = getOption();
-			chart?.setOption(_option);
-		};
 
 		const getOption = () => {
+			const echarts = proxy?.$echarts as ECharts & { graphic: any };
 			let option = {
 				series: [
 					{
 						type: 'gauge',
-						startAngle: 210,
-						endAngle: -30,
+						startAngle: 215,
+						endAngle: -35,
 						min: 0,
 						max: 100,
-						splitNumber: 10,
-						center: ['50%', '52%'],
+						splitNumber: -1,
+						radius: '80%',
+						center: ['51%', '63%'],
+						pointer: { show: false },
+						axisTick: { show: false },
 						axisLine: {
+							show: true,
 							lineStyle: {
-								width: 10,
+								width: 14,
 								color: [
-									[0.25, '#7DF5FF'],
-									[0.5, '#00D4D3'],
-									[0.75, '#FFBC90'],
-									[1, '#DE0113'],
+									[
+										1,
+										echarts.graphic.LinearGradient(0, 0, 1, 0, [
+											{ offset: 0.1, color: '#00F3FF' },
+											{ offset: 0.6, color: '#FF8D44' },
+											{ offset: 1, color: '#DE0113' },
+										]),
+									],
 								],
 							},
 						},
-						pointer: { itemStyle: { color: 'auto' } },
-						axisTick: { show: false },
-						splitLine: { show: false },
 						axisLabel: { show: false },
 						title: { show: false },
 						detail: {
 							fontSize: 22,
-							offsetCenter: [0, '40%'],
+							offsetCenter: [0, '-15%'],
 							valueAnimation: true,
-							formatter: function (value: number) {
-								return value + '%';
-							},
-							color: 'auto',
+							color: '#00E4FF',
 						},
 						data: [
 							{

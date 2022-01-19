@@ -5,16 +5,16 @@
 * @description: 预警趋势
 ****************************************-->
 <template>
-  <ChartBoxTwo type="early" style="height: 100%; width: 100%">
-    <div class="chart" ref="lineChart"></div>
-  </ChartBoxTwo>
+	<ChartBoxTwo type="early" style="height: 100%; width: 100%">
+		<div class="chart" ref="lineChart"></div>
+	</ChartBoxTwo>
 </template>
 <script lang="ts">
 // 预警趋势
 import ChartBoxTwo from '@components/chartBoxTwo/main.vue';
-import { defineComponent, onMounted, reactive, ref, getCurrentInstance, toRefs,watch } from 'vue';
+import { defineComponent, onMounted, reactive, ref, getCurrentInstance, toRefs, watch } from 'vue';
 import { EChartsOption, DataZoomComponentOption } from 'echarts';
-import {apiWarningTrend} from "@/api/home"
+import { apiWarningTrend } from '@/api/home';
 
 export default defineComponent({
 	name: 'workStatus',
@@ -28,7 +28,7 @@ export default defineComponent({
 	components: { ChartBoxTwo },
 
 	setup(props) {
-		let timer:any = null
+		let timer: any = null;
 		let lineChart = ref(null);
 		let { proxy } = getCurrentInstance() as any;
 		let chart: any = null;
@@ -37,26 +37,22 @@ export default defineComponent({
 		let dataZoomTime = 6000;
 		let zoomLoop: any = null;
 
-
 		let xAxisData: any = [];
-    let echartData:any = [];
-
+		let echartData: any = [];
 
 		const initChart = () => {
 			//使用主题初始化
 			let dom = lineChart.value;
 			chart = proxy.$echarts.init(dom);
 		};
-		
-		watch(
-			()=>props.chartData,
-			(newVal,oldVal)=>{
 
-			}
-		)
+		watch(
+			() => props.chartData,
+			(newVal, oldVal) => {},
+		);
 
 		const init = async () => {
-      await getData()
+			await getData();
 			initChart();
 			chartAnim();
 		};
@@ -69,14 +65,13 @@ export default defineComponent({
 			});
 		});
 
-
-    // 获取数据
-    const getData = async ()=>{
-      await apiWarningTrend().then(res=>{
-				let data = res.data
-				echartData = data
-      })
-    }
+		// 获取数据
+		const getData = async () => {
+			await apiWarningTrend().then(res => {
+				let data = res.data;
+				echartData = data;
+			});
+		};
 
 		const chartAnim = () => {
 			zoomLoop && clearTimeout(zoomLoop);
@@ -84,99 +79,97 @@ export default defineComponent({
 			let _option = getOption();
 			chart.setOption(_option);
 			updateChart(_option as EChartsOption);
-      dynamic(chart, _option as EChartsOption,2000);
+			dynamic(chart, _option as EChartsOption, 2000);
 		};
 
-
-		
 		const getOption = () => {
-			let colorsArea = ['rgba(0, 199, 231, ','rgba(255, 141, 68,','rgba(11, 154, 168,']
+			let colorsArea = ['rgba(0, 199, 231, ', 'rgba(255, 141, 68,', 'rgba(11, 154, 168,'];
 			let _seriesData: any = [];
-					xAxisData = echartData.date 
+			xAxisData = echartData.date;
 			let zrUtil = proxy.$echarts.util;
-			echartData.list.forEach((list:any,k:number) => {
-					let json = {
-							chart0: {
-									xcategory: xAxisData,
-									low: list.item,
-									lowLine: [],
-							},
-					};
+			echartData.list.forEach((list: any, k: number) => {
+				let json = {
+					chart0: {
+						xcategory: xAxisData,
+						low: list.item,
+						lowLine: [],
+					},
+				};
 
-					zrUtil.each(json.chart0.xcategory, function (item, index) {
-							json.chart0.lowLine.push([
-									{
-											coord: [index, json.chart0.low[index]],
-									},
-									{
-											coord: [index + 1, json.chart0.low[index + 1]],
-									},
-							]);
-					});
-
-					_seriesData.push(
+				zrUtil.each(json.chart0.xcategory, function (item, index) {
+					json.chart0.lowLine.push([
 						{
-								name: list.name,
-								type: 'line',
-								// smooth: true,
-								symbol: 'circle',
-								symbolSize: 10,
-								areaStyle: {
-										normal: {
-												color: new proxy.$echarts.graphic.LinearGradient(
-														0,
-														0,
-														0,
-														1,
-														[
-																{
-																		offset: 0,
-																		color: colorsArea[k]+'.9)',
-																},
-																{
-																		offset: 0.8,
-																		color: 'rgba(6, 8, 41,.1)',
-																},
-														],
-														false
-												),
-												shadowColor: colorsArea[k]+' 0.1)',
-												shadowBlur: 10,
-										},
-								},
-								itemStyle: {
-										normal: {
-												color: colorsArea[k]+'1)',
-										},
-								},
-								data: list.item,
+							coord: [index, json.chart0.low[index]],
 						},
 						{
-								name: list.name,
-								type: 'lines',
-								coordinateSystem: 'cartesian2d',
-								zlevel: 1,
-								smooth: true,
-								symbol: 'circle',
-								effect: {
-										show: true,
-										smooth: true,
-										period: 2,
-										symbolSize: 8,
-								},
-								lineStyle: {
-										normal: {
-												color: colorsArea[k]+'1)',
-												width: 0,
-												opacity: 0,
-												curveness: 0,
+							coord: [index + 1, json.chart0.low[index + 1]],
+						},
+					]);
+				});
+
+				_seriesData.push(
+					{
+						name: list.name,
+						type: 'line',
+						zlevel: k,
+						// smooth: true,
+						symbol: 'circle',
+						symbolSize: 10,
+						areaStyle: {
+							normal: {
+								color: new proxy.$echarts.graphic.LinearGradient(
+									0,
+									0,
+									0,
+									1,
+									[
+										{
+											offset: 0,
+											color: colorsArea[k] + '.9)',
 										},
-								},
-								data: json.chart0.lowLine,
-						})
+										{
+											offset: 0.8,
+											color: 'rgba(6, 8, 41,.1)',
+										},
+									],
+									false,
+								),
+								shadowColor: colorsArea[k] + ' 0.1)',
+								shadowBlur: 10,
+							},
+						},
+						itemStyle: {
+							normal: {
+								color: colorsArea[k] + '1)',
+							},
+						},
+						data: list.item,
+					},
+					{
+						name: list.name,
+						type: 'lines',
+						coordinateSystem: 'cartesian2d',
+						zlevel: 1,
+						smooth: true,
+						symbol: 'circle',
+						effect: {
+							show: true,
+							smooth: true,
+							period: 2,
+							symbolSize: 8,
+						},
+						lineStyle: {
+							normal: {
+								color: colorsArea[k] + '1)',
+								width: 0,
+								opacity: 0,
+								curveness: 0,
+							},
+						},
+						data: json.chart0.lowLine,
+					},
+				);
 			});
-
-
 
 			let option = {
 				tooltip: {
@@ -190,18 +183,17 @@ export default defineComponent({
 						fontSize: 12,
 						color: '#FBFAFB',
 					},
-					axisPointer:{
-						type:"shadow",
-					}
+					axisPointer: {
+						type: 'shadow',
+					},
 					// formatter: function (params){}
 				},
 				legend: {
 					// data: legendData, //['ff', '联盟广告', '视频广告', '直接访问', '搜索引擎']
 					top: '5%',
-					textStyle:{
-						color:"#A8DFFF"
-					}
-
+					textStyle: {
+						color: '#A8DFFF',
+					},
 				},
 				dataZoom: [
 					{
@@ -274,10 +266,7 @@ export default defineComponent({
 						},
 					},
 				},
-				series: _seriesData
-				
-				
-				
+				series: _seriesData,
 			};
 			return option;
 		};
@@ -306,36 +295,36 @@ export default defineComponent({
 			// 启动
 			setTimeout(fn, dataZoomTime);
 		};
-    // tooltip自动轮询
-    const dynamic = (chart:any, op:EChartsOption, sec:number)=>{
+		// tooltip自动轮询
+		const dynamic = (chart: any, op: EChartsOption, sec: number) => {
 			op.currentIndex = -1;
 			const fn = () => {
-					let dataLen = op.series[0].data.length;
-					if (dataLen <= 0) return;
-					// 取消之前高亮的图形
-					chart.dispatchAction({
-						type: "downplay",
-						seriesIndex: 0,
-						dataIndex: op.currentIndex,
-					});
-					op.currentIndex = (op.currentIndex + 1) % dataLen;
-					// 高亮当前图形
-					chart.dispatchAction({
-						type: "highlight",
-						seriesIndex: 0,
-						dataIndex: op.currentIndex,
-					});
-					// 显示 tooltip
-					chart.dispatchAction({
-						type: "showTip",
-						seriesIndex: 0,
-						dataIndex: op.currentIndex,
-					});
-					timer && clearTimeout(timer);
-					timer = setTimeout(fn, sec);
+				let dataLen = op.series[0].data.length;
+				if (dataLen <= 0) return;
+				// 取消之前高亮的图形
+				chart.dispatchAction({
+					type: 'downplay',
+					seriesIndex: 0,
+					dataIndex: op.currentIndex,
+				});
+				op.currentIndex = (op.currentIndex + 1) % dataLen;
+				// 高亮当前图形
+				chart.dispatchAction({
+					type: 'highlight',
+					seriesIndex: 0,
+					dataIndex: op.currentIndex,
+				});
+				// 显示 tooltip
+				chart.dispatchAction({
+					type: 'showTip',
+					seriesIndex: 0,
+					dataIndex: op.currentIndex,
+				});
+				timer && clearTimeout(timer);
+				timer = setTimeout(fn, sec);
 			};
-      timer = setTimeout(fn, sec);
-    }
+			timer = setTimeout(fn, sec);
+		};
 
 		return {
 			lineChart,

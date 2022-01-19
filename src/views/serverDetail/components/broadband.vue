@@ -1,28 +1,22 @@
 <script lang="ts">
 import ChartBox from '@components/chartBoxFour/main.vue';
-import { defineComponent, onMounted, reactive, ref, getCurrentInstance, toRefs, watch } from 'vue';
-import { EChartsOption, DataZoomComponentOption } from 'echarts';
+import { defineComponent, onMounted, ref, watch } from 'vue';
+import { EChartsOption, ECharts, EChartOption } from 'echarts';
+import { dynamic, updateChart, initChart, getInstance } from '@/serve/echartsCommon';
 export default defineComponent({
 	name: 'broadband',
 	components: { ChartBox },
 	props: { data: Object },
 	setup(props) {
-		let timer: any = null;
+		let timer: NodeJS.Timer | null = null;
 		let lineChart = ref(null);
-		let { proxy } = getCurrentInstance() as any;
-		let chart: any = null;
+		let { proxy } = getInstance();
+		let chart: ECharts | null = null;
 		let dataZoomLength = 10;
 		let dataZoomTime = 3000;
-		let zoomLoop: any = null;
-
-		let xAxisData: any = [];
+		let zoomLoop: NodeJS.Timer | null = null;
+		let xAxisData: string[] = [];
 		let echartData: any = [];
-
-		const initChart = () => {
-			//使用主题初始化
-			let dom = lineChart.value;
-			chart = proxy.$echarts.init(dom);
-		};
 
 		watch(
 			() => props.data,
@@ -34,20 +28,23 @@ export default defineComponent({
 		);
 
 		onMounted(() => {
-			initChart();
-			window.addEventListener('resize', function () {
-				// 让我们的图表调用 resize这个方法
-				chart && chart.resize();
-			});
+			chart = initChart(chart, lineChart);
 		});
 
 		const chartAnim = () => {
 			zoomLoop && clearTimeout(zoomLoop);
-			chart.clear();
+			chart?.clear();
 			let _option = getOption();
-			chart.setOption(_option);
-			updateChart(_option as EChartsOption);
-			dynamic(chart, _option as EChartsOption, 2000);
+			chart?.setOption(_option as EChartOption);
+			updateChart(
+				chart,
+				_option as EChartsOption,
+				xAxisData,
+				dataZoomLength,
+				zoomLoop,
+				dataZoomTime,
+			);
+			dynamic(timer, chart, _option as EChartsOption, 2000);
 		};
 
 		const getOption = () => {
@@ -61,30 +58,22 @@ export default defineComponent({
 				'rgba(255, 255, 255,',
 			];
 			let _seriesData: any = [];
-
+			const echarts = proxy?.$echarts as ECharts & { graphic: any };
 			echartData.forEach((list: any, k: number) => {
 				_seriesData.push({
 					name: list.name,
+					zlevel: k,
 					type: 'line',
 					symbol: 'none',
 					itemStyle: {
 						color: _areaColor[k] + '1)',
-						lineStyle: {
-							color: _areaColor[k] + '1)',
-							width: 2,
-						},
+						lineStyle: { color: _areaColor[k] + '1)', width: 2 },
 					},
+					//区域填充样式
 					areaStyle: {
-						//区域填充样式
-						color: new proxy.$echarts.graphic.LinearGradient(0, 1, 0, 0, [
-							{
-								offset: 0,
-								color: _areaColor[k] + ' 0.1)',
-							},
-							{
-								offset: 1,
-								color: _areaColor[k] + '0.5)',
-							},
+						color: echarts.graphic.LinearGradient(0, 1, 0, 0, [
+							{ offset: 0, color: _areaColor[k] + ' 0.1)' },
+							{ offset: 1, color: _areaColor[k] + '0.5)' },
 						]),
 					},
 					data: list.value,
@@ -99,13 +88,8 @@ export default defineComponent({
 					extraCssText: 'box-shadow: inset rgb(23, 213, 235) 0px 0px 15px 1px;',
 					borderColor: '#17D5EB',
 					borderWidth: 1,
-					textStyle: {
-						fontSize: 12,
-						color: '#FBFAFB',
-					},
-					axisPointer: {
-						type: 'shadow',
-					},
+					textStyle: { fontSize: 12, color: '#FBFAFB' },
+					axisPointer: { type: 'shadow' },
 				},
 				legend: {
 					top: '5%',
@@ -125,28 +109,23 @@ export default defineComponent({
 				grid: {
 					left: '3%',
 					right: '2%',
-					bottom: '2%',
+					bottom: '8%',
 					top: '12%',
 					containLabel: true,
 				},
 				xAxis: {
 					axisLabel: {
 						show: true,
-						rotate: 30,
-						margin: 20,
+						margin: 10,
 						textStyle: {
 							color: '#A8DFFF', //更改坐标轴文字颜色
 							fontSize: 14, //更改坐标轴文字大小
 						},
 						formatter: function (value: any, index: any) {
 							return value.slice(0, 4) + '' + value.slice(4);
-							// var date = new Date(value);
-							// return date.getFullYear()+'\n'+(date.getMonth() + 1)+'-'+date.getDate();
 						},
 					},
-					axisTick: {
-						show: false,
-					},
+					axisTick: { show: false },
 					axisLine: {
 						show: true,
 						lineStyle: {
@@ -156,7 +135,6 @@ export default defineComponent({
 					data: xAxisData,
 				},
 				yAxis: {
-					// type: 'value',
 					splitNumber: 5,
 					axisLabel: {
 						show: true,
@@ -181,61 +159,6 @@ export default defineComponent({
 				series: _seriesData,
 			};
 			return option;
-		};
-		// 当 line  bar 数据过多是启动轮询
-		const updateChart = (option: EChartsOption) => {
-			let xAxisName = xAxisData;
-
-			let fn = () => {
-				if (xAxisName.length <= dataZoomLength + 1) {
-					zoomLoop && clearTimeout(zoomLoop);
-					return;
-				}
-				// 每次向后滚动一个，最后一个从头开始。
-				let zoom = option.dataZoom as DataZoomComponentOption[];
-				if ((zoom[0].endValue as number) >= xAxisName.length - 1) {
-					option.dataZoom[0].endValue = dataZoomLength;
-					option.dataZoom[0].startValue = 0;
-				} else {
-					option.dataZoom[0].endValue = option.dataZoom[0].endValue + 1;
-					option.dataZoom[0].startValue = option.dataZoom[0].startValue + 1;
-				}
-				chart.setOption(option);
-				zoomLoop && clearTimeout(zoomLoop);
-				zoomLoop = setTimeout(fn, dataZoomTime);
-			};
-			// 启动
-			setTimeout(fn, dataZoomTime);
-		};
-		// tooltip自动轮询
-		const dynamic = (chart, op: EChartsOption, sec: number) => {
-			op.currentIndex = -1;
-			const fn = () => {
-				let dataLen = op.series[0].data.length;
-				if (dataLen <= 0) return;
-				// 取消之前高亮的图形
-				chart.dispatchAction({
-					type: 'downplay',
-					seriesIndex: 0,
-					dataIndex: op.currentIndex,
-				});
-				op.currentIndex = (op.currentIndex + 1) % dataLen;
-				// 高亮当前图形
-				chart.dispatchAction({
-					type: 'highlight',
-					seriesIndex: 0,
-					dataIndex: op.currentIndex,
-				});
-				// 显示 tooltip
-				chart.dispatchAction({
-					type: 'showTip',
-					seriesIndex: 0,
-					dataIndex: op.currentIndex,
-				});
-				timer && clearTimeout(timer);
-				timer = setTimeout(fn, sec);
-			};
-			timer = setTimeout(fn, sec);
 		};
 
 		return {

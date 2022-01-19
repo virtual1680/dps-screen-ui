@@ -36,15 +36,15 @@ export default defineComponent({
 				bg: new URL('./img/hardware-bg.png', import.meta.url).href,
 			},
 			cpu: {
-				title: 'CPU温度',
+				title: 'CPU使用率',
 				bg: new URL('./img/cpu-bg.png', import.meta.url).href,
 			},
 			performance: {
 				title: '进程占比',
 				bg: new URL('./img/performance-bg.png', import.meta.url).href,
 			},
-			disk: {
-				title: '硬盘温度',
+			memory: {
+				title: '内存使用率',
 				bg: new URL('./img/disk-bg.png', import.meta.url).href,
 			},
 			read: {

@@ -41,7 +41,7 @@ export default defineComponent({
 	},
 	setup() {
 		let data = reactive({
-			serverPageShow: true,
+			serverPageShow: false,
 			leftTopData: {},
 			rightTopData: {},
 			orderStatusData: {},
@@ -86,7 +86,6 @@ export default defineComponent({
 
 		// emit事件监听
 		const closeSpage = (val: string) => {
-			console.log(val);
 			data.serverPageShow = false;
 			console.log(data.serverPageShow);
 		};

@@ -24,7 +24,7 @@ export default defineComponent({
 
 		let data = reactive({
 			tableData: [],
-			serverPageShow: true,
+			serverPageShow: false,
 		});
 
 		onMounted(() => {

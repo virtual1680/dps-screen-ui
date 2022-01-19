@@ -5,17 +5,17 @@
 * @description: 工单状态
 ****************************************-->
 <template>
-  <ChartBoxTwo type="workData" style="height: 100%; width: 100%">
-    <div class="chart" ref="lineChart"></div>
-  </ChartBoxTwo>
+	<ChartBoxTwo type="workData" style="height: 100%; width: 100%">
+		<div class="chart" ref="lineChart"></div>
+	</ChartBoxTwo>
 </template>
 <script lang="ts">
 // 工单状态
 import ChartBoxTwo from '@components/chartBoxTwo/main.vue';
-import { defineComponent, onMounted, reactive, ref, getCurrentInstance, toRefs,watch } from 'vue';
+import { defineComponent, onMounted, reactive, ref, getCurrentInstance, toRefs, watch } from 'vue';
 import { EChartsOption, DataZoomComponentOption } from 'echarts';
 
-import {apiOrderTypeTrend} from "@/api/home"
+import { apiOrderTypeTrend } from '@/api/home';
 
 export default defineComponent({
 	name: 'workStatus',
@@ -29,7 +29,7 @@ export default defineComponent({
 	components: { ChartBoxTwo },
 
 	setup(props) {
-		let timer:any = null
+		let timer: any = null;
 		let lineChart = ref(null);
 		let { proxy } = getCurrentInstance() as any;
 		let chart: any = null;
@@ -39,24 +39,21 @@ export default defineComponent({
 		let zoomLoop: any = null;
 
 		let xAxisData: any = [];
-    let echartData:any = [];
-
+		let echartData: any = [];
 
 		const initChart = () => {
 			//使用主题初始化
 			let dom = lineChart.value;
 			chart = proxy.$echarts.init(dom);
 		};
-		
-		watch(
-			()=>props.chartData,
-			(newVal,oldVal)=>{
 
-			}
-		)
+		watch(
+			() => props.chartData,
+			(newVal, oldVal) => {},
+		);
 
 		const init = async () => {
-      await getData()
+			await getData();
 			initChart();
 			chartAnim();
 		};
@@ -68,14 +65,14 @@ export default defineComponent({
 				chart && chart.resize();
 			});
 		});
-    // 获取数据
-    const getData = async ()=>{
-      await apiOrderTypeTrend().then(res=>{
-				let data = res.data
-				echartData = data
-				console.log("))))))",echartData)
-      })
-    }
+		// 获取数据
+		const getData = async () => {
+			await apiOrderTypeTrend().then(res => {
+				let data = res.data;
+				echartData = data;
+				console.log('))))))', echartData);
+			});
+		};
 
 		const chartAnim = () => {
 			zoomLoop && clearTimeout(zoomLoop);
@@ -83,53 +80,52 @@ export default defineComponent({
 			let _option = getOption();
 			chart.setOption(_option);
 			updateChart(_option as EChartsOption);
-      dynamic(chart, _option as EChartsOption,2000);
+			dynamic(chart, _option as EChartsOption, 2000);
 		};
 
-
-		
 		const getOption = () => {
 			let _areaColor = [
-				'rgba(11, 154, 168,', 
-				'rgba(0, 228, 255,', 
+				'rgba(11, 154, 168,',
+				'rgba(0, 228, 255,',
 				'rgba(255, 141, 68,',
 				'rgba(241, 94, 94, ',
 				'rgba(51, 63, 255,',
 				'rgba(255, 225, 255,',
-				'rgba(255, 255, 255,'];
-			 xAxisData = echartData.date
+				'rgba(255, 255, 255,',
+			];
+			xAxisData = echartData.date;
 
 			let _seriesData: any = [];
-			
-			echartData.list.forEach((list:any,k:number) => {
-				_seriesData.push({
-						name: list.name,
-						type: 'line',
-						symbol: 'none',
-						itemStyle: {
-							color: _areaColor[k]+'1)',
-							lineStyle: {
-									color: _areaColor[k]+'1)',
-									width: 2,
-							},
-							areaStyle: {
-									//区域填充样式
-									color: new proxy.$echarts.graphic.LinearGradient(0, 1, 0, 0, [
-											{
-													offset: 0,
-													color: _areaColor[k]+' 0.1)',
-											},
-											{
-													offset: 1,
-													color: _areaColor[k]+'0.5)',
-											},
-									]),
-							},
-						},
-						data: list.item,
-				})
-			})
 
+			echartData.list.forEach((list: any, k: number) => {
+				_seriesData.push({
+					name: list.name,
+					type: 'line',
+					zlevel: k,
+					symbol: 'none',
+					itemStyle: {
+						color: _areaColor[k] + '1)',
+						lineStyle: {
+							color: _areaColor[k] + '1)',
+							width: 2,
+						},
+						areaStyle: {
+							//区域填充样式
+							color: new proxy.$echarts.graphic.LinearGradient(0, 1, 0, 0, [
+								{
+									offset: 0,
+									color: _areaColor[k] + ' 0.1)',
+								},
+								{
+									offset: 1,
+									color: _areaColor[k] + '0.5)',
+								},
+							]),
+						},
+					},
+					data: list.item,
+				});
+			});
 
 			let option = {
 				tooltip: {
@@ -143,18 +139,17 @@ export default defineComponent({
 						fontSize: 12,
 						color: '#FBFAFB',
 					},
-					axisPointer:{
-						type:"shadow",
-					}
+					axisPointer: {
+						type: 'shadow',
+					},
 					// formatter: function (params){}
 				},
 				legend: {
 					// data: legendData, //['ff', '联盟广告', '视频广告', '直接访问', '搜索引擎']
 					top: '5%',
-					textStyle:{
-						color:"#A8DFFF"
-					}
-
+					textStyle: {
+						color: '#A8DFFF',
+					},
 				},
 				dataZoom: [
 					{
@@ -256,36 +251,36 @@ export default defineComponent({
 			// 启动
 			setTimeout(fn, dataZoomTime);
 		};
-    // tooltip自动轮询
-    const dynamic = (chart, op:EChartsOption, sec:number)=>{
+		// tooltip自动轮询
+		const dynamic = (chart, op: EChartsOption, sec: number) => {
 			op.currentIndex = -1;
 			const fn = () => {
-					let dataLen = op.series[0].data.length;
-					if (dataLen <= 0) return;
-					// 取消之前高亮的图形
-					chart.dispatchAction({
-						type: "downplay",
-						seriesIndex: 0,
-						dataIndex: op.currentIndex,
-					});
-					op.currentIndex = (op.currentIndex + 1) % dataLen;
-					// 高亮当前图形
-					chart.dispatchAction({
-						type: "highlight",
-						seriesIndex: 0,
-						dataIndex: op.currentIndex,
-					});
-					// 显示 tooltip
-					chart.dispatchAction({
-						type: "showTip",
-						seriesIndex: 0,
-						dataIndex: op.currentIndex,
-					});
-					timer && clearTimeout(timer);
-					timer = setTimeout(fn, sec);
+				let dataLen = op.series[0].data.length;
+				if (dataLen <= 0) return;
+				// 取消之前高亮的图形
+				chart.dispatchAction({
+					type: 'downplay',
+					seriesIndex: 0,
+					dataIndex: op.currentIndex,
+				});
+				op.currentIndex = (op.currentIndex + 1) % dataLen;
+				// 高亮当前图形
+				chart.dispatchAction({
+					type: 'highlight',
+					seriesIndex: 0,
+					dataIndex: op.currentIndex,
+				});
+				// 显示 tooltip
+				chart.dispatchAction({
+					type: 'showTip',
+					seriesIndex: 0,
+					dataIndex: op.currentIndex,
+				});
+				timer && clearTimeout(timer);
+				timer = setTimeout(fn, sec);
 			};
-      timer = setTimeout(fn, sec);
-    }
+			timer = setTimeout(fn, sec);
+		};
 
 		return {
 			lineChart,

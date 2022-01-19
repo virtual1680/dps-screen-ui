@@ -127,7 +127,7 @@ export default defineComponent({
 				...props.config,
 				header,
 			});
-			const { data: rowData } = config.value;
+			const { data: rowData, pageSize } = config.value;
 			data.value = rowData.map((item: any, index: number) => {
 				return {
 					...item,
@@ -137,7 +137,7 @@ export default defineComponent({
 			copyData.value = data.value;
 			computedWidth();
 			computedHeight();
-			if (!animationFrame && data.value.length) {
+			if (!animationFrame && data.value.length > pageSize) {
 				begin();
 			}
 		};
