@@ -5,7 +5,7 @@
 </template>
 <script lang="ts">
 // 服务器
-import ServeSource from '../serveSource/index.vue';
+import ServeSource from './serveSource/index.vue';
 import { defineComponent, onMounted, reactive, ref, getCurrentInstance, toRefs } from 'vue';
 import { EChartsOption, DataZoomComponentOption } from 'echarts';
 

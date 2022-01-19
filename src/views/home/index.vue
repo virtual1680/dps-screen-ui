@@ -4,6 +4,7 @@ import screenHeader from '@components/header/index.vue';
 import EarlyWarningNum from '@/components/earlyWarningNum/main.vue';
 import CensusNum from '@components/censusNum/main.vue';
 
+import CenterBox from './components/home/center/index.vue';
 import ServeCategory from './components/home/serveCategory/index.vue';
 import WorkStatus from './components/home/workStatus/index.vue';
 import deviceNews from './components/home/deviceNews/index.vue';
@@ -25,7 +26,7 @@ export default defineComponent({
 		screenHeader,
 		EarlyWarningNum,
 		CensusNum,
-
+		CenterBox, //中间模块
 		ServeCategory, //服务器分类
 		WorkStatus,
 		deviceNews, //设备信息
@@ -36,7 +37,6 @@ export default defineComponent({
 		workOrderAbbormal, //工单故障
 		workOrderData, //工单数据
 		warningTrend, //预警趋势
-
 		serverPage,
 	},
 	setup() {
@@ -121,7 +121,9 @@ export default defineComponent({
 							<serveResources />
 						</div>
 					</div>
-					<div class="item-2"></div>
+					<div class="item-2">
+						<CenterBox style="height: 100%; width: 100%" />
+					</div>
 					<div class="item-3 flex-jc-cb flex-d-c">
 						<ServeCategory style="width: 360px; height: 342px" />
 						<!-- 设备信息 -->

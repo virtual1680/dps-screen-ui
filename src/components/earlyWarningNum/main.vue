@@ -9,7 +9,7 @@
 			<div class="compare">
 				<div class="label">{{ data[type].des }}</div>
 				<div class="value">
-					<img :src="compare[num.trend==0?'up':'down']" alt="" />
+					<img :src="compare[num.trend == 0 ? 'up' : 'down']" alt="" />
 					{{ num.rangeValue }}
 				</div>
 			</div>
@@ -31,7 +31,7 @@ export default defineComponent({
 		num: {
 			type: Object,
 			default: {
-				value:0
+				value: 0,
 			},
 		},
 		// percent: {

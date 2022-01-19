@@ -1,10 +1,10 @@
 import * as echarts from 'echarts';
-import { 
-	ElButton, 
-	ElInput, 
-	ElForm, 
-	ElFormItem, 
-	ElIcon, 
+import {
+	ElButton,
+	ElInput,
+	ElForm,
+	ElFormItem,
+	ElIcon,
 	ElUpload,
 	ElTable,
 	ElTableColumn,
@@ -19,13 +19,25 @@ import { App } from 'vue';
 export default {
 	install: (app: App) => {
 		app.config.globalProperties.$echarts = echarts;
-		app.use(ElButton)
-		app.use(ElInput)
-		app.use(ElForm)
-		app.use(ElFormItem)
-		app.use(ElIcon)
-		app.use(ElUpload)
-		app.use(ElTable)
-		app.use(ElTableColumn)
+		app.use(ElButton);
+		app.use(ElInput);
+		app.use(ElForm);
+		app.use(ElFormItem);
+		app.use(ElIcon);
+		app.use(ElUpload);
+		app.use(ElTable);
+		app.use(ElTableColumn);
+		app.directive('loadmore', {
+			mounted(el, binding) {
+				const selectWrap = el.querySelector('.el-table__body-wrapper');
+				selectWrap.addEventListener('scroll', function () {
+					let sign = 0;
+					const scrollDistance = this.scrollHeight - this.scrollTop - this.clientHeight;
+					if (scrollDistance <= sign) {
+						binding.value();
+					}
+				});
+			},
+		});
 	},
 };
