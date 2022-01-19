@@ -14,8 +14,8 @@ export default defineComponent({
 	props: {
 		content: String,
 		data: {
-			type: Number,
-			default: 0,
+			type: String,
+			default: '0',
 		},
 	},
 	components: { ChartBox },

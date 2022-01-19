@@ -70,7 +70,6 @@ export default defineComponent({
 			await apiOrderTypeTrend().then(res => {
 				let data = res.data;
 				echartData = data;
-				console.log('))))))', echartData);
 			});
 		};
 
@@ -178,10 +177,8 @@ export default defineComponent({
 						show: true,
 						rotate: 30,
 						margin: 20,
-						textStyle: {
-							color: '#A8DFFF', //更改坐标轴文字颜色
-							fontSize: 14, //更改坐标轴文字大小
-						},
+						color: '#A8DFFF', //更改坐标轴文字颜色
+						fontSize: 14, //更改坐标轴文字大小
 						formatter: function (value: any, index: any) {
 							return value.slice(0, 4) + '' + value.slice(4);
 							// var date = new Date(value);
@@ -204,10 +201,8 @@ export default defineComponent({
 					splitNumber: 5,
 					axisLabel: {
 						show: true,
-						textStyle: {
-							color: '#5399AF', //更改坐标轴文字颜色
-							fontSize: 14, //更改坐标轴文字大小
-						},
+						color: '#5399AF', //更改坐标轴文字颜色
+						fontSize: 14, //更改坐标轴文字大小
 					},
 					axisLine: {
 						show: false,

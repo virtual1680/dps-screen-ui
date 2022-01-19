@@ -32,9 +32,9 @@ export default defineComponent({
 			internet: {},
 			iops: {},
 			disk: {},
-			diskUsage: 0,
-			memoryUsage: 0,
-			cpuUsage: 0,
+			diskUsage: '0',
+			memoryUsage: '0',
+			cpuUsage: '0',
 		});
 
 		onMounted(() => {

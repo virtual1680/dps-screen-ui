@@ -65,15 +65,12 @@ export default defineComponent({
 		// 右上标签数据接口
 		const getRightTopTags = () => {
 			apiRightTopTags().then(res => {
-				console.log('res.data');
-				console.log(res.data);
 				data.rightTopData = res.data;
 			});
 		};
 		// 工单状态
 		const getOrderStatusTrend = () => {
 			apiOrderStatusTrend().then(res => {
-				console.log('工单状态', res.data);
 				data.orderStatusData = res.data;
 			});
 		};
@@ -81,13 +78,11 @@ export default defineComponent({
 		// 打开服务器列表页
 		const openServerPageFun = () => {
 			data.serverPageShow = true;
-			console.log(data.serverPageShow);
 		};
 
 		// emit事件监听
 		const closeSpage = (val: string) => {
 			data.serverPageShow = false;
-			console.log(data.serverPageShow);
 		};
 
 		return { data, openServerPageFun, closeSpage };
@@ -128,7 +123,6 @@ export default defineComponent({
 					</div>
 					<div class="item-2"></div>
 					<div class="item-3 flex-jc-cb flex-d-c">
-						<serverCategor />
 						<ServeCategory style="width: 360px; height: 342px" />
 						<!-- 设备信息 -->
 						<deviceNews />

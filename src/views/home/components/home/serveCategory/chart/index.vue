@@ -5,14 +5,14 @@
 * @description: 服务器分类
 ****************************************-->
 <template>
-    <div class="chart" ref="lineChart"></div>
+	<div class="chart" ref="lineChart"></div>
 </template>
 <script lang="ts">
 // 服务器分类
-import { defineComponent, onMounted, reactive, ref, getCurrentInstance, toRefs,watch } from 'vue';
+import { defineComponent, onMounted, reactive, ref, getCurrentInstance, toRefs, watch } from 'vue';
 import { EChartsOption, DataZoomComponentOption } from 'echarts';
 
-import {apiServerCategory} from "@/api/home"
+import { apiServerCategory } from '@/api/home';
 export default defineComponent({
 	name: 'serverCategor',
 	props: {
@@ -22,11 +22,11 @@ export default defineComponent({
 			default: () => [],
 		},
 	},
-	components: {  },
+	components: {},
 
 	setup(props) {
-		let timer:any = null
-		let echartData:any = []
+		let timer: any = null;
+		let echartData: any = [];
 		let lineChart = ref(null);
 		let { proxy } = getCurrentInstance() as any;
 		let chart: any = null;
@@ -40,16 +40,14 @@ export default defineComponent({
 			let dom = lineChart.value;
 			chart = proxy.$echarts.init(dom);
 		};
-		
-		watch(
-			()=>props.chartData,
-			(newVal,oldVal)=>{
 
-			}
-		)
+		watch(
+			() => props.chartData,
+			(newVal, oldVal) => {},
+		);
 
 		const init = async () => {
-      await getData()
+			await getData();
 			initChart();
 			chartAnim();
 		};
@@ -61,13 +59,12 @@ export default defineComponent({
 				chart && chart.resize();
 			});
 		});
-    // 获取数据
-    const getData = async ()=>{
-      await apiServerCategory().then(res=>{
-				echartData = res.data
-				console.log("data",echartData)
-      })
-    }
+		// 获取数据
+		const getData = async () => {
+			await apiServerCategory().then(res => {
+				echartData = res.data;
+			});
+		};
 
 		const chartAnim = () => {
 			zoomLoop && clearTimeout(zoomLoop);
@@ -75,18 +72,17 @@ export default defineComponent({
 			let _option = getOption();
 			chart.setOption(_option);
 			// updateChart(_option as EChartsOption);
-      dynamic(chart, _option as EChartsOption,5000);
+			dynamic(chart, _option as EChartsOption, 5000);
 		};
-		
 
 		const getOption = () => {
-			var salvProName = echartData.map((item:any) => item.name);
-					xAxisData = salvProName
-			var salvProValue =echartData.map((item:any) => item.count);
-			var salvProMax =[];//背景按最大值
+			var salvProName = echartData.map((item: any) => item.name);
+			xAxisData = salvProName;
+			var salvProValue = echartData.map((item: any) => item.count);
+			var salvProMax = []; //背景按最大值
 
 			for (let i = 0; i < salvProValue.length; i++) {
-					salvProMax.push(salvProValue[0])
+				salvProMax.push(salvProValue[0]);
 			}
 
 			let option = {
@@ -101,25 +97,24 @@ export default defineComponent({
 						fontSize: 12,
 						color: '#FBFAFB',
 					},
-					axisPointer:{
-						type:"shadow",
+					axisPointer: {
+						type: 'shadow',
 					},
-					formatter:(params:any)=>{
-						let item  = params.filter((item:any)=>item.seriesName!='背景')
-						let str = ''
-						item.forEach((item:any) => {
-							str+=item.name+":"+item.value+'\n'
+					formatter: (params: any) => {
+						let item = params.filter((item: any) => item.seriesName != '背景');
+						let str = '';
+						item.forEach((item: any) => {
+							str += item.name + ':' + item.value + '\n';
 						});
-						return str
-					}
+						return str;
+					},
 				},
 				legend: {
-					show:false,
+					show: false,
 					top: '5%',
-					textStyle:{
-						color:"#A8DFFF"
-					}
-
+					textStyle: {
+						color: '#A8DFFF',
+					},
 				},
 				// dataZoom: [
 				// 	{
@@ -147,10 +142,8 @@ export default defineComponent({
 					axisLabel: {
 						show: false,
 						margin: 20,
-						textStyle: {
-							color: '#A8DFFF', //更改坐标轴文字颜色
-							fontSize: 14, //更改坐标轴文字大小
-						},
+						color: '#A8DFFF', //更改坐标轴文字颜色
+						fontSize: 14, //更改坐标轴文字大小
 					},
 					axisTick: {
 						show: false,
@@ -166,80 +159,83 @@ export default defineComponent({
 					},
 					data: xAxisData,
 				},
-				yAxis: [{
-					type: 'category',
-					axisLabel: {
-						show: true,
-						textStyle: {
+				yAxis: [
+					{
+						type: 'category',
+						axisLabel: {
+							show: true,
 							color: '#5399AF', //更改坐标轴文字颜色
 							fontSize: 14, //更改坐标轴文字大小
 						},
-					},
-					axisLine: {
-						show: false,
-						lineStyle: {
-							color: 'rgba(18, 81, 115, 0.6)',
+						axisLine: {
+							show: false,
+							lineStyle: {
+								color: 'rgba(18, 81, 115, 0.6)',
+							},
 						},
-					},
-					splitLine: {
-						show: false,
-						lineStyle: {
-							color: 'rgba(38,151,255,.12)',
+						splitLine: {
+							show: false,
+							lineStyle: {
+								color: 'rgba(38,151,255,.12)',
+							},
 						},
+						data: salvProName,
 					},
-        	data: salvProName
-				},{
-					type: 'category',
-					axisLabel: {
-						show: true,
-						textStyle: {
+					{
+						type: 'category',
+						axisLabel: {
+							show: true,
 							color: '#5399AF', //更改坐标轴文字颜色
 							fontSize: 14, //更改坐标轴文字大小
 						},
+						axisLine: {
+							show: false,
+							lineStyle: {
+								color: 'rgba(18, 81, 115, 0.6)',
+							},
+						},
+						splitLine: {
+							show: false,
+							lineStyle: {
+								color: 'rgba(38,151,255,.12)',
+							},
+						},
+						data: salvProValue,
 					},
-					axisLine: {
-						show: false,
-						lineStyle: {
-							color: 'rgba(18, 81, 115, 0.6)',
+				],
+				series: [
+					{
+						name: '值',
+						type: 'bar',
+						zlevel: 1,
+						itemStyle: {
+							borderRadius: 30,
+							color: new proxy.$echarts.graphic.LinearGradient(0, 1, 1, 0, [
+								{
+									offset: 0,
+									color: 'rgba(0,0,0,0)',
+								},
+								{
+									offset: 1,
+									color: '#00E8FB',
+								},
+							]),
+						},
+						barWidth: 4,
+						data: salvProValue,
+					},
+					{
+						name: '背景',
+						type: 'bar',
+						barWidth: 4,
+						barGap: '-100%',
+						data: salvProMax,
+						itemStyle: {
+							color: '#006A7A',
+							borderRadius: 30,
 						},
 					},
-					splitLine: {
-						show: false,
-						lineStyle: {
-							color: 'rgba(38,151,255,.12)',
-						},
-					},
-        	data:salvProValue
-				}],
-				series:  [{
-					name: '值',
-					type: 'bar',
-					zlevel: 1,
-					itemStyle: {
-						barBorderRadius: 30,
-						color: new proxy.$echarts.graphic.LinearGradient(0, 1, 1, 0, [{
-								offset: 0,
-								color: 'rgba(0,0,0,0)'
-						}, {
-								offset: 1,
-								color: '#00E8FB'
-						}]),
-					},
-					barWidth: 4,
-					data: salvProValue
-        },
-        {
-					name: '背景',
-					type: 'bar',
-					barWidth: 4,
-					barGap: '-100%',
-					data: salvProMax,
-					itemStyle: {
-						color: '#006A7A',
-						barBorderRadius: 30,
-					},
-        },
-    ],
+				],
 			};
 			return option;
 		};
@@ -268,36 +264,36 @@ export default defineComponent({
 			// 启动
 			setTimeout(fn, dataZoomTime);
 		};
-    // tooltip自动轮询
-    const dynamic = (chart, op:EChartsOption, sec:number)=>{
+		// tooltip自动轮询
+		const dynamic = (chart, op: EChartsOption, sec: number) => {
 			op.currentIndex = -1;
 			const fn = () => {
-					let dataLen = op.series[0].data.length;
-					if (dataLen <= 0) return;
-					// 取消之前高亮的图形
-					chart.dispatchAction({
-						type: "downplay",
-						seriesIndex: 0,
-						dataIndex: op.currentIndex,
-					});
-					op.currentIndex = (op.currentIndex + 1) % dataLen;
-					// 高亮当前图形
-					chart.dispatchAction({
-						type: "highlight",
-						seriesIndex: 0,
-						dataIndex: op.currentIndex,
-					});
-					// 显示 tooltip
-					chart.dispatchAction({
-						type: "showTip",
-						seriesIndex: 0,
-						dataIndex: op.currentIndex,
-					});
-					timer && clearTimeout(timer);
-					timer = setTimeout(fn, sec);
+				let dataLen = op.series[0].data.length;
+				if (dataLen <= 0) return;
+				// 取消之前高亮的图形
+				chart.dispatchAction({
+					type: 'downplay',
+					seriesIndex: 0,
+					dataIndex: op.currentIndex,
+				});
+				op.currentIndex = (op.currentIndex + 1) % dataLen;
+				// 高亮当前图形
+				chart.dispatchAction({
+					type: 'highlight',
+					seriesIndex: 0,
+					dataIndex: op.currentIndex,
+				});
+				// 显示 tooltip
+				chart.dispatchAction({
+					type: 'showTip',
+					seriesIndex: 0,
+					dataIndex: op.currentIndex,
+				});
+				timer && clearTimeout(timer);
+				timer = setTimeout(fn, sec);
 			};
-      timer = setTimeout(fn, sec);
-    }
+			timer = setTimeout(fn, sec);
+		};
 
 		return {
 			lineChart,

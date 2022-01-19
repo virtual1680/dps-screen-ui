@@ -33,14 +33,11 @@ export default defineComponent({
 		// 打开服务器列表页
 		const openServerPageFun = () => {
 			data.serverPageShow = true;
-			console.log(data.serverPageShow);
 		};
 
 		// emit事件监听
 		const closeSpage = (val: string) => {
-			console.log(val);
 			data.serverPageShow = false;
-			console.log(data.serverPageShow);
 		};
 
 		const closeServerListPage = () => {

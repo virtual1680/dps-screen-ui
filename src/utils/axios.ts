@@ -21,7 +21,6 @@ const instance: AxiosInstance = axios.create({
 let lock = 0;
 // 错误处理
 const error = (error: AxiosError) => {
-	console.log('-=-=-=-=-=');
 	if (error.message.includes('timeout')) {
 		ElMessage.error('请求超时，请刷新网页重试');
 	}
@@ -48,20 +47,16 @@ type Config = AxiosRequestConfig & {
 instance.interceptors.request.use<Config>((config: Config) => {
 	const meta = config.meta;
 	const isToken = meta?.isToken === false;
-	(config.headers as AxiosRequestHeaders)[
-		'Authorization'
-	] = `Basic c2FiZXI6c2FiZXJfc2VjcmV0`;
+	(config.headers as AxiosRequestHeaders)['Authorization'] = `Basic c2FiZXI6c2FiZXJfc2VjcmV0`;
 	//让每个请求携带token
 	if (getToken() && !isToken) {
-		(config.headers as AxiosRequestHeaders)['Blade-Auth'] =
-			'bearer ' + getToken();
+		(config.headers as AxiosRequestHeaders)['Blade-Auth'] = 'bearer ' + getToken();
 	}
 	//headers中配置text请求
 	if (config.text === true) {
 		(config.headers as AxiosRequestHeaders)['Content-Type'] = 'text/plain';
 	} else {
-		(config.headers as AxiosRequestHeaders)['Content-Type'] =
-			'application/json;charset=UTF-8';
+		(config.headers as AxiosRequestHeaders)['Content-Type'] = 'application/json;charset=UTF-8';
 	}
 
 	return config;
@@ -71,8 +66,7 @@ instance.interceptors.response.use((response: AxiosResponse) => {
 	const config: Config = response.config;
 	//获取状态码
 	const status = response.data.code || response.status;
-	const message =
-		response.data.msg || response.data.error_description || '未知错误';
+	const message = response.data.msg || response.data.error_description || '未知错误';
 	if (status === 401) {
 		if (lock === 1) return false;
 		//只执行一次

@@ -13,8 +13,8 @@ export default defineComponent({
 	name: 'diskUsage',
 	props: {
 		data: {
-			type: Number,
-			default: 0,
+			type: String,
+			default: '0',
 		},
 	},
 	components: { ChartBox },
@@ -59,7 +59,7 @@ export default defineComponent({
 								],
 							},
 						},
-						pointer: { itemStyle: { color: 'auto' } },
+						pointer: { itemStyle: { color: 'inherit' } },
 						axisTick: { show: false },
 						splitLine: { show: false },
 						axisLabel: { show: false },
@@ -71,7 +71,7 @@ export default defineComponent({
 							formatter: function (value: number) {
 								return value + '%';
 							},
-							color: 'auto',
+							color: 'inherit',
 						},
 						data: [
 							{

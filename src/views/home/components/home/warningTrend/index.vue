@@ -92,18 +92,13 @@ export default defineComponent({
 					chart0: {
 						xcategory: xAxisData,
 						low: list.item,
-						lowLine: [],
+						lowLine: [] as any[],
 					},
 				};
-
-				zrUtil.each(json.chart0.xcategory, function (item, index) {
+				zrUtil.each(json.chart0.xcategory, function (_: unknown, index: number) {
 					json.chart0.lowLine.push([
-						{
-							coord: [index, json.chart0.low[index]],
-						},
-						{
-							coord: [index + 1, json.chart0.low[index + 1]],
-						},
+						[index, json.chart0.low[index]],
+						[index + 1, json.chart0.low[index + 1]],
 					]);
 				});
 
@@ -116,32 +111,28 @@ export default defineComponent({
 						symbol: 'circle',
 						symbolSize: 10,
 						areaStyle: {
-							normal: {
-								color: new proxy.$echarts.graphic.LinearGradient(
-									0,
-									0,
-									0,
-									1,
-									[
-										{
-											offset: 0,
-											color: colorsArea[k] + '.9)',
-										},
-										{
-											offset: 0.8,
-											color: 'rgba(6, 8, 41,.1)',
-										},
-									],
-									false,
-								),
-								shadowColor: colorsArea[k] + ' 0.1)',
-								shadowBlur: 10,
-							},
+							color: new proxy.$echarts.graphic.LinearGradient(
+								0,
+								0,
+								0,
+								1,
+								[
+									{
+										offset: 0,
+										color: colorsArea[k] + '.9)',
+									},
+									{
+										offset: 0.8,
+										color: 'rgba(6, 8, 41,.1)',
+									},
+								],
+								false,
+							),
+							shadowColor: colorsArea[k] + ' 0.1)',
+							shadowBlur: 10,
 						},
 						itemStyle: {
-							normal: {
-								color: colorsArea[k] + '1)',
-							},
+							color: colorsArea[k] + '1)',
 						},
 						data: list.item,
 					},
@@ -149,7 +140,7 @@ export default defineComponent({
 						name: list.name,
 						type: 'lines',
 						coordinateSystem: 'cartesian2d',
-						zlevel: 1,
+						zlevel: k + 150,
 						smooth: true,
 						symbol: 'circle',
 						effect: {
@@ -159,12 +150,10 @@ export default defineComponent({
 							symbolSize: 8,
 						},
 						lineStyle: {
-							normal: {
-								color: colorsArea[k] + '1)',
-								width: 0,
-								opacity: 0,
-								curveness: 0,
-							},
+							color: colorsArea[k] + '1)',
+							width: 0,
+							opacity: 0,
+							curveness: 0,
 						},
 						data: json.chart0.lowLine,
 					},
@@ -222,10 +211,8 @@ export default defineComponent({
 						show: true,
 						rotate: 30,
 						margin: 20,
-						textStyle: {
-							color: '#A8DFFF', //更改坐标轴文字颜色
-							fontSize: 14, //更改坐标轴文字大小
-						},
+						color: '#A8DFFF', //更改坐标轴文字颜色
+						fontSize: 14, //更改坐标轴文字大小
 						formatter: function (value: any, index: any) {
 							return value.slice(0, 4) + '' + value.slice(4);
 							// var date = new Date(value);
@@ -248,10 +235,8 @@ export default defineComponent({
 					splitNumber: 5,
 					axisLabel: {
 						show: true,
-						textStyle: {
-							color: '#5399AF', //更改坐标轴文字颜色
-							fontSize: 14, //更改坐标轴文字大小
-						},
+						color: '#5399AF', //更改坐标轴文字颜色
+						fontSize: 14, //更改坐标轴文字大小
 					},
 					axisLine: {
 						show: false,

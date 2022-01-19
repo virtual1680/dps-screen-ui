@@ -119,10 +119,8 @@ export default defineComponent({
 					axisLabel: {
 						show: true,
 						margin: 10,
-						textStyle: {
-							color: '#A8DFFF', //更改坐标轴文字颜色
-							fontSize: 14, //更改坐标轴文字大小
-						},
+						color: '#A8DFFF', //更改坐标轴文字颜色
+						fontSize: 14, //更改坐标轴文字大小
 					},
 					axisTick: { show: false },
 					axisLine: {
@@ -137,10 +135,8 @@ export default defineComponent({
 					splitNumber: 5,
 					axisLabel: {
 						show: true,
-						textStyle: {
-							color: '#5399AF', //更改坐标轴文字颜色
-							fontSize: 14, //更改坐标轴文字大小
-						},
+						color: '#5399AF', //更改坐标轴文字颜色
+						fontSize: 14, //更改坐标轴文字大小
 					},
 					axisLine: {
 						show: false,

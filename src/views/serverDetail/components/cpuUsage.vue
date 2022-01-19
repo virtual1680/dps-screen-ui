@@ -13,8 +13,8 @@ export default defineComponent({
 	name: 'serverNode',
 	props: {
 		data: {
-			type: Number,
-			default: 0,
+			type: String,
+			default: '0',
 		},
 	},
 	components: { ChartBox },

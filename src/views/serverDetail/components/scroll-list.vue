@@ -151,7 +151,6 @@ export default defineComponent({
 		//提供方法给父组件调用 用于push数据到列表中
 		const pushData = (arr: any[]) => {
 			if (!arr.length) {
-				console.warn('push data not is null');
 				return false;
 			}
 			const { pageSize } = config.value;
@@ -216,7 +215,6 @@ export default defineComponent({
 			}
 			data.value = copyData.value.slice(0, pageSize + 1);
 			animationFrame = requestAnimationFrame(begin);
-			console.log(stop);
 			if (stop) {
 				isCancel = true;
 				cancelAnimationFrame(animationFrame);
