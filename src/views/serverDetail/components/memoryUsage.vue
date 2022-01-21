@@ -41,6 +41,17 @@ export default defineComponent({
 
 		const getOption = () => {
 			const echarts = proxy?.$echarts as ECharts & { graphic: any };
+			let color = [{ offset: 0.25, color: '#7DF5FF' }];
+			let value = parseFloat(props.data) / 100;
+			if (value <= 1 && value > 0.85) {
+				color.push({ offset: 1, color: '#DE0113' });
+			}
+			if (value <= 0.75 && value > 0.55) {
+				color.push({ offset: 0.75, color: '#FFBC90' });
+			}
+			if (value <= 0.5 && value > 0.3) {
+				color.push({ offset: 0.5, color: '#00D4D3' });
+			}
 			let option = {
 				series: [
 					{
@@ -58,16 +69,7 @@ export default defineComponent({
 							show: true,
 							lineStyle: {
 								width: 14,
-								color: [
-									[
-										1,
-										echarts.graphic.LinearGradient(0, 0, 1, 0, [
-											{ offset: 0.1, color: '#00F3FF' },
-											{ offset: 0.6, color: '#FF8D44' },
-											{ offset: 1, color: '#DE0113' },
-										]),
-									],
-								],
+								color: [[value, echarts.graphic.LinearGradient(0, 0, 1, 0, color)]],
 							},
 						},
 						axisLabel: { show: false },
@@ -76,7 +78,10 @@ export default defineComponent({
 							fontSize: 22,
 							offsetCenter: [0, '-15%'],
 							valueAnimation: true,
-							color: '#00E4FF',
+							color: '#7DF5FF',
+							formatter: (value: string) => {
+								return value + '%';
+							},
 						},
 						data: [
 							{

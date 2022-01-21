@@ -62,9 +62,9 @@ export default defineComponent({
 						`<div class="row-icon">${index + 1}</div>`,
 						item.name,
 						`<div class="mix">
-							<span class="tx">${item.cpuUsage}%</span>
+							<span class="tx">${item.usage}%</span>
 							<div class="progress">
-								<div style="width: 35%"></div>
+								<div style="width:${item.usage || 25}%"></div>
 							</div>
 						</div>`,
 					],

@@ -1,6 +1,7 @@
 <script lang="ts">
-import { defineComponent, onMounted, reactive, ref } from 'vue';
+import { defineComponent, onMounted, reactive, ref, nextTick } from 'vue';
 import { apiServerList } from '@/api/serverList';
+import type { ElTable } from 'element-plus';
 interface RowData {
 	config: string;
 	cpu: string;
@@ -15,6 +16,7 @@ export default defineComponent({
 	name: 'serverList',
 	components: {},
 	setup(_, { emit }) {
+		let tableRef = ref<InstanceType<typeof ElTable>>();
 		let data = reactive({
 			tableData: [],
 			params: {
@@ -45,17 +47,26 @@ export default defineComponent({
 				getLeftList();
 			}
 		};
-		const clickRow = (val: RowData) => {
-			console.log('-=-=-=-=', val);
-			emit('openDetail', val);
+		const setCurrent = (row?: RowData) => {
+			tableRef.value!.setCurrentRow(row);
 		};
-		return { data, clickRow, loadMore };
+		const clickRow = (val: RowData) => {
+			if (val) {
+				emit('openDetail', val);
+				//清除已选行，防止第二次点击无效
+				nextTick(() => {
+					setCurrent();
+				});
+			}
+		};
+		return { data, clickRow, loadMore, tableRef };
 	},
 });
 </script>
 
 <template>
 	<el-table
+		ref="tableRef"
 		v-loadmore="loadMore"
 		@current-change="clickRow"
 		:header-cell-style="{

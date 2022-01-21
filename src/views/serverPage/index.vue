@@ -26,13 +26,12 @@ export default defineComponent({
 		let data = reactive({
 			tableData: [],
 			serverPageShow: false,
-			ip: '',
 		});
 		let ip = ref('');
 
 		// 打开服务器详情
 		const openServeDetail = (row: RowData) => {
-			ip.value = `${row.ip},${row.publicIp}`;
+			ip.value = `${row.ip},${row.publicIp},${new Date().getTime()}`;
 			data.serverPageShow = true;
 		};
 		// emit事件监听
