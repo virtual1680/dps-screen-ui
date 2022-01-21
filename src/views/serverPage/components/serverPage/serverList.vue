@@ -1,6 +1,16 @@
 <script lang="ts">
 import { defineComponent, onMounted, reactive, ref } from 'vue';
 import { apiServerList } from '@/api/serverList';
+interface RowData {
+	config: string;
+	cpu: string;
+	disk: string;
+	ip: string;
+	memory: string;
+	provider: string;
+	publicIp: string;
+	serverName: string;
+}
 export default defineComponent({
 	name: 'serverList',
 	components: {},
@@ -26,8 +36,7 @@ export default defineComponent({
 		};
 
 		onMounted(() => {
-			// 获取数据
-			getLeftList();
+			getLeftList(); // 获取数据
 		});
 		const loadMore = () => {
 			if (data.loading) {
@@ -36,15 +45,11 @@ export default defineComponent({
 				getLeftList();
 			}
 		};
-		const closeServerListPage = () => {
-			emit('closeServerPage', '关闭服务器列表弹窗');
+		const clickRow = (val: RowData) => {
+			console.log('-=-=-=-=', val);
+			emit('openDetail', val);
 		};
-
-		return {
-			data,
-			loadMore,
-			closeServerListPage,
-		};
+		return { data, clickRow, loadMore };
 	},
 });
 </script>
@@ -52,6 +57,7 @@ export default defineComponent({
 <template>
 	<el-table
 		v-loadmore="loadMore"
+		@current-change="clickRow"
 		:header-cell-style="{
 			backgroundColor: 'transparent',
 			textAlign: 'center',
@@ -74,6 +80,7 @@ export default defineComponent({
 		row-class-name="sad"
 		:data="data.tableData"
 		height="880"
+		highlight-current-row
 		style="width: 100%">
 		<el-table-column prop="serverName" width="180" :show-overflow-tooltip="true" label="项目">
 			<template #default="scope">

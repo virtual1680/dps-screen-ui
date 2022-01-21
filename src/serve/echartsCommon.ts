@@ -5,8 +5,12 @@ export const getInstance = (): ComponentInternalInstance => {
 };
 
 //使用主题初始化
-export const initChart = (chart: ECharts, lineChart: Ref): ECharts => {
-	let { proxy } = getInstance();
+export const initChart = (
+	chart: ECharts,
+	lineChart: Ref,
+	instance?: ComponentInternalInstance,
+): ECharts => {
+	let { proxy } = instance || getInstance();
 	let dom = lineChart.value;
 	chart = proxy.$echarts.init(dom);
 	window.addEventListener('resize', function () {

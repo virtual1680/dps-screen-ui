@@ -1,5 +1,5 @@
 <script lang="ts">
-import { defineComponent, onMounted, reactive } from 'vue';
+import { defineComponent, onMounted, reactive, watch } from 'vue';
 import diskUsage from './components/diskUsage.vue';
 import cpuUsage from './components/cpuUsage.vue';
 import performance from './components/performance.vue';
@@ -24,6 +24,9 @@ export default defineComponent({
 		iops,
 		disk,
 	},
+	props: {
+		ip: { type: String, default: '' },
+	},
 	setup(props, { emit }) {
 		let data = reactive({
 			performance: {},
@@ -36,9 +39,17 @@ export default defineComponent({
 			memoryUsage: '0',
 			cpuUsage: '0',
 		});
-
-		onMounted(() => {
-			let params = { provider: '', publicIp: '10.10.1.32', ip: '10.10.1.32' };
+		watch(
+			() => props.ip,
+			n => {
+				if (n) {
+					let [ip, publicIp] = n.split(',');
+					loadData(ip, publicIp);
+				}
+			},
+		);
+		const loadData = (ip: string, publicIp: string) => {
+			let params = { provider: '', publicIp, ip };
 			apiServerInfo(params).then(res => {
 				const title = res.data.date;
 				//进程占比
@@ -60,12 +71,10 @@ export default defineComponent({
 				//cpu使用
 				data.cpuUsage = res.data.cpuUsageNow;
 			});
-		});
-
+		};
 		const closeServerListPage = () => {
 			emit('closeServerPage', '关闭服务器列表弹窗');
 		};
-
 		return {
 			data,
 			closeServerListPage,

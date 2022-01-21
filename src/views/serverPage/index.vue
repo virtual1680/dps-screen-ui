@@ -1,42 +1,42 @@
 <script lang="ts">
-import {
-	defineComponent,
-	getCurrentInstance,
-	ComponentInternalInstance,
-	onMounted,
-	reactive,
-} from 'vue';
+import { defineComponent, reactive, ref } from 'vue';
 import serverList from './components/serverPage/serverList.vue';
 import orderList from './components/serverPage/orderList.vue';
 import warningList from './components/serverPage/warningList.vue';
-
 import serverDetail from '../serverDetail/index.vue';
+interface RowData {
+	config: string;
+	cpu: string;
+	disk: string;
+	ip: string;
+	memory: string;
+	provider: string;
+	publicIp: string;
+	serverName: string;
+}
 export default defineComponent({
-	name: 'home',
+	name: 'servePage',
 	components: {
 		serverList,
 		orderList,
 		warningList,
 		serverDetail,
 	},
-	setup(props, { emit }) {
-		let { proxy } = getCurrentInstance() as ComponentInternalInstance;
-
+	setup(_, { emit }) {
 		let data = reactive({
 			tableData: [],
 			serverPageShow: false,
+			ip: '',
 		});
+		let ip = ref('');
 
-		onMounted(() => {
-			// (proxy?.$echarts as any).init();
-		});
-		// 打开服务器列表页
-		const openServerPageFun = () => {
+		// 打开服务器详情
+		const openServeDetail = (row: RowData) => {
+			ip.value = `${row.ip},${row.publicIp}`;
 			data.serverPageShow = true;
 		};
-
 		// emit事件监听
-		const closeSpage = (val: string) => {
+		const closeDetail = (val: string) => {
 			data.serverPageShow = false;
 		};
 
@@ -46,9 +46,10 @@ export default defineComponent({
 
 		return {
 			data,
+			ip,
 			closeServerListPage,
-			closeSpage,
-			openServerPageFun,
+			closeDetail,
+			openServeDetail,
 		};
 	},
 });
@@ -59,11 +60,11 @@ export default defineComponent({
 		<div class="tool">
 			<span @click="closeServerListPage">返回数据大屏</span>
 		</div>
-		<div class="list_container" @click="openServerPageFun">
+		<div class="list_container">
 			<div class="left_box">
 				<div class="title">服务器列表</div>
 				<div class="inner_box">
-					<serverList />
+					<serverList @openDetail="openServeDetail" />
 				</div>
 			</div>
 			<div class="right_box">
@@ -82,7 +83,8 @@ export default defineComponent({
 			</div>
 		</div>
 		<serverDetail
-			@closeServerPage="closeSpage"
+			:ip="ip"
+			@closeServerPage="closeDetail"
 			:class="['server-page', data.serverPageShow ? 'fadeIn' : 'fadeOut']" />
 	</div>
 </template>

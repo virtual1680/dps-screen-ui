@@ -7,80 +7,50 @@
 <template>
 	<ChartBox type="earlyError" style="width: 360px; height: 253px">
 		<div class="chart" ref="lineChart"></div>
+		<div class="detail-box" @click="openServeList"></div>
 	</ChartBox>
 </template>
 <script lang="ts">
 import ChartBox from '@components/chartBoxOne/main.vue';
-import { defineComponent, onMounted, reactive, ref, getCurrentInstance, toRefs, watch } from 'vue';
-import { EChartsOption, DataZoomComponentOption } from 'echarts';
-
+import { defineComponent, onMounted, ref } from 'vue';
+import { EChartsOption, ECharts, EChartOption } from 'echarts';
+import { initChart, getInstance, dynamic } from '@/serve/echartsCommon';
 import { apiErrorCategory } from '@/api/home';
 
 export default defineComponent({
-	name: 'workStatus',
-	props: {
-		content: String,
-		chartData: {
-			type: Array,
-			default: () => [],
-		},
-	},
+	name: 'warningAbnormal',
 	components: { ChartBox },
 
-	setup(props) {
-		let timer: any = null;
+	setup(_, { emit }) {
+		let timer: NodeJS.Timer | null = null;
 		let lineChart = ref(null);
-		let { proxy } = getCurrentInstance() as any;
-		let chart: any = null;
-		let option: object = {};
-		let dataZoomLength = 7;
-		let dataZoomTime = 3000;
+		const instance = getInstance();
+		let chart: ECharts | null = null;
 		let zoomLoop: any = null;
-		let xAxisData: any = [];
-
 		let echartData: any = {};
-
-		const initChart = () => {
-			//使用主题初始化
-			let dom = lineChart.value;
-			chart = proxy.$echarts.init(dom);
-		};
-
-		watch(
-			() => props.chartData,
-			(newVal, oldVal) => {},
-		);
 
 		const init = async () => {
 			await getData();
-			initChart();
+			chart = initChart(chart, lineChart, instance);
 			chartAnim();
 		};
 
 		onMounted(() => {
 			init();
-			window.addEventListener('resize', function () {
-				// 让我们的图表调用 resize这个方法
-				chart && chart.resize();
-			});
 		});
 		// 获取数据
 		const getData = async () => {
 			await apiErrorCategory().then(res => {
 				echartData = res.data;
-				console.log('sdfsdf', echartData);
 			});
 		};
-		// alarmNum: 1
-		// exceptNum: 0
-		// normalNum: 1
 
 		const chartAnim = () => {
 			zoomLoop && clearTimeout(zoomLoop);
-			chart.clear();
+			chart?.clear();
 			let _option = getOption();
-			chart.setOption(_option);
-			dynamic(chart, _option as EChartsOption, 5000);
+			chart?.setOption(_option as EChartOption);
+			dynamic(timer, chart, _option as EChartsOption, 5000);
 		};
 
 		const formatNumber = (num: any) => {
@@ -91,18 +61,9 @@ export default defineComponent({
 		const getOption = () => {
 			let total = echartData.alarmNum + echartData.exceptNum + echartData.normalNum;
 			let seriesData = [
-				{
-					name: '预警台数',
-					value: echartData.alarmNum,
-				},
-				{
-					name: '异常台数',
-					value: echartData.exceptNum,
-				},
-				{
-					name: '正常台数',
-					value: echartData.normalNum,
-				},
+				{ name: '预警台数', value: echartData.alarmNum },
+				{ name: '异常台数', value: echartData.exceptNum },
+				{ name: '正常台数', value: echartData.normalNum },
 			];
 			let color = [
 				'#00E4FF',
@@ -157,10 +118,8 @@ export default defineComponent({
 					axisPointer: {
 						type: 'shadow',
 					},
-					// formatter: function (params){}
 				},
 				legend: {
-					// data: legendData, //['ff', '联盟广告', '视频广告', '直接访问', '搜索引擎']
 					bottom: '12%',
 					textStyle: {
 						color: '#A8DFFF',
@@ -168,17 +127,11 @@ export default defineComponent({
 					},
 					itemWidth: 12,
 					itemHeight: 5,
-					// formatter: function (name:string){
-					//   console.log(name)
-					//   return name
-					// }
 				},
 				grid: {
 					left: '0%',
 					top: '0%',
 					containLabel: true,
-					// backgroundColor: "rgba(0,0,0,0.2)",
-					// borderWidth: 0
 				},
 				series: [
 					{
@@ -201,37 +154,11 @@ export default defineComponent({
 			};
 			return option;
 		};
-		// tooltip自动轮询
-		const dynamic = (chart, op: EChartsOption, sec: number) => {
-			op.currentIndex = -1;
-			const fn = () => {
-				let dataLen = op.series[0].data.length;
-				if (dataLen <= 0) return;
-				// 取消之前高亮的图形
-				chart.dispatchAction({
-					type: 'downplay',
-					seriesIndex: 0,
-					dataIndex: op.currentIndex,
-				});
-				op.currentIndex = (op.currentIndex + 1) % dataLen;
-				// 高亮当前图形
-				chart.dispatchAction({
-					type: 'highlight',
-					seriesIndex: 0,
-					dataIndex: op.currentIndex,
-				});
-				// 显示 tooltip
-				chart.dispatchAction({
-					type: 'showTip',
-					seriesIndex: 0,
-					dataIndex: op.currentIndex,
-				});
-				timer && clearTimeout(timer);
-				timer = setTimeout(fn, sec);
-			};
-			timer = setTimeout(fn, sec);
+		const openServeList = () => {
+			emit('openServeList', true);
 		};
 		return {
+			openServeList,
 			lineChart,
 		};
 	},
@@ -241,5 +168,18 @@ export default defineComponent({
 .chart {
 	width: 100%;
 	height: 100%;
+}
+.chart-one-box:deep(.content) {
+	position: relative;
+}
+.detail-box {
+	width: 80px;
+	height: 30px;
+	left: 50%;
+	margin-left: -40px;
+	background: transparent;
+	position: absolute;
+	bottom: 0;
+	cursor: pointer;
 }
 </style>

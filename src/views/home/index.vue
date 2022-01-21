@@ -37,7 +37,7 @@ export default defineComponent({
 		workOrderAbbormal, //工单故障
 		workOrderData, //工单数据
 		warningTrend, //预警趋势
-		serverPage,
+		serverPage, //第二弹窗
 	},
 	setup() {
 		let data = reactive({
@@ -91,7 +91,7 @@ export default defineComponent({
 </script>
 
 <template>
-	<div class="container" @click="openServerPageFun">
+	<div class="container">
 		<screenHeader />
 		<div class="content">
 			<div class="left-container">
@@ -158,8 +158,8 @@ export default defineComponent({
 						style="width: 172px; height: 83px" />
 				</div>
 				<div class="early-chart flex-jc-cb">
-					<earlyWarning />
-					<warningAbnormal />
+					<earlyWarning @openServeList="openServerPageFun" />
+					<warningAbnormal @openServeList="openServerPageFun" />
 				</div>
 				<div style="height: 280px; width: 100%">
 					<warningTrend />
@@ -197,7 +197,6 @@ export default defineComponent({
 				grid-row: 1 / span 1;
 			}
 			.item-2 {
-				// background: red;
 				grid-column: 3 / span 1;
 				grid-row: 1 / span 2;
 			}

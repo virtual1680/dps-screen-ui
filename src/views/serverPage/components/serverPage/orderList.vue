@@ -40,10 +40,8 @@ export default defineComponent({
 				getLeftList();
 			}
 		};
-		return {
-			data,
-			loadMore,
-		};
+
+		return { data, loadMore };
 	},
 });
 </script>
