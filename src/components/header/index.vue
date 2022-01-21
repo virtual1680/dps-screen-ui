@@ -25,11 +25,9 @@ export default defineComponent({
 	height: 80px;
 	position: relative;
 	background-image: url('@/assets/header.png');
-	background-size: contain;
-	// background-color: red;
+	background-size: 100% 100%;
 	&:before {
-		// content: "";
-		// background-image: url("@{localUrl}/images/0-可视化公用组件/header-g.png");
+		// content: '';
 		width: 1920px;
 		height: 80px;
 		position: absolute;
@@ -42,17 +40,12 @@ export default defineComponent({
 		position: absolute;
 		top: 11%;
 		left: 15%;
-		// background-image: url("@{localUrl}/images/0-可视化公用组件/back0.png");
 		background-repeat: no-repeat;
 		padding-left: 85px;
 		cursor: pointer;
-		&:hover {
-			//  background-image: url("@{localUrl}/images/0-可视化公用组件/back.png");
-		}
 		span {
 			font-size: 50px;
 			background: -webkit-linear-gradient(top, #ffffff, #f8ffbe, #ffde01);
-			-webkit-background-clip: text;
 			color: transparent;
 		}
 	}
@@ -63,7 +56,6 @@ export default defineComponent({
 		span {
 			font-size: 50px;
 			background: -webkit-linear-gradient(top, #ffffff, #f8ffbe, #ffde01);
-			-webkit-background-clip: text;
 			color: transparent;
 		}
 	}
