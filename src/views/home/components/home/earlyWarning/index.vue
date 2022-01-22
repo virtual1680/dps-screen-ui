@@ -26,6 +26,7 @@ export default defineComponent({
 		let chart: ECharts | null = null;
 		let zoomLoop: any = null;
 		let echartData: any = [];
+		let totalCount = 0;
 		const instance = getInstance();
 		const init = async () => {
 			await getData();
@@ -40,6 +41,7 @@ export default defineComponent({
 		const getData = async () => {
 			await apiWarningCategory().then(res => {
 				let data = res.data.percentage;
+				totalCount = res.data.totalCount;
 				echartData = data.map((item: any) => {
 					return {
 						name: item.type,
@@ -61,9 +63,6 @@ export default defineComponent({
 			let reg = /(?=(\B)(\d{3})+$)/g;
 			return num.toString().replace(reg, ',');
 		};
-		let total = echartData.reduce((a: any, b: any) => {
-			return a + b.value * 1;
-		}, 0);
 
 		const getOption = () => {
 			let color = [
@@ -83,7 +82,7 @@ export default defineComponent({
 				color: color,
 				title: [
 					{
-						text: '{name|总量}\n{val|' + formatNumber(total) + '}',
+						text: '{name|总量}\n{val|' + formatNumber(totalCount) + '}',
 						top: '25%',
 						left: 'center',
 						textStyle: {

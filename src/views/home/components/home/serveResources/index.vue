@@ -6,10 +6,10 @@
 <script lang="ts">
 // 服务器
 import ServeSource from './serveSource/index.vue';
-import { defineComponent, onMounted, reactive, ref, getCurrentInstance, toRefs } from 'vue';
+import { defineComponent, onMounted, ref, getCurrentInstance } from 'vue';
 import { EChartsOption, DataZoomComponentOption } from 'echarts';
 
-import { apiServerNope } from '@/api/home';
+import { apiServerRemainingResources } from '@/api/home';
 
 export default defineComponent({
 	name: 'serveResources',
@@ -21,19 +21,12 @@ export default defineComponent({
 		},
 	},
 	components: { ServeSource },
-	setup(props) {
+	setup() {
 		let lineChart = ref(null);
-		let timer: any = null;
 		let { proxy } = getCurrentInstance() as any;
 		let chart: any = null;
-		let option: object = {};
-		let dataZoomLength = 7;
-		let dataZoomTime = 3000;
 		let zoomLoop: any = null;
-		let xAxisData: any = [];
-
-		let echartData: any = [];
-
+		let echartData: number = 0;
 		const initChart = () => {
 			//使用主题初始化
 			let dom = lineChart.value;
@@ -54,14 +47,9 @@ export default defineComponent({
 		});
 		// 获取数据
 		const getData = async () => {
-			await apiServerNope().then(res => {
+			await apiServerRemainingResources().then(res => {
 				let data = res.data;
-				echartData = data.map((item: any) => {
-					return {
-						name: item.type,
-						value: item.value,
-					};
-				});
+				echartData = data.surplusDiskUsage;
 			});
 		};
 
@@ -115,7 +103,7 @@ export default defineComponent({
 				},
 				title: [
 					{
-						text: '75%',
+						text: parseFloat(`${echartData * 100}`).toFixed(0) + '%',
 						left: '50%',
 						top: '42%',
 						textAlign: 'center',
@@ -174,7 +162,7 @@ export default defineComponent({
 						backgroundStyle: {
 							color: 'rgba(0,0,0,0)',
 						},
-						data: [75],
+						data: [echartData * 100],
 						coordinateSystem: 'polar',
 						itemStyle: {
 							color: new proxy.$echarts.graphic.LinearGradient(1, 0, 0, 0, [

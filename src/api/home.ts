@@ -10,82 +10,66 @@ import request from '@/utils/axios';
 // 	});
 // };
 
-
-
 // 左上标签数据接口
 export const apiLeftTopTags = () => {
 	return request({
 		url: '/m-screen/statistics/getTagsLeftData',
 		method: 'get',
-		params: {
-		},
+		params: {},
 	});
 };
-
 
 // 右上标签数据接口
 export const apiRightTopTags = () => {
 	return request({
 		url: '/m-screen/statistics/getTagsRightData',
 		method: 'get',
-		params: {
-		},
+		params: {},
 	});
 };
-
 
 // 工单状态
 export const apiOrderStatusTrend = () => {
 	return request({
 		url: '/m-screen/statistics/getOrderStatusTrend',
 		method: 'get',
-		params: {
-		},
+		params: {},
 	});
 };
-
 
 // 设备信息
 export const apiDeviceInfo = () => {
 	return request({
 		url: '/m-screen/statistics/getDeviceInfo',
 		method: 'get',
-		params: {
-		},
+		params: {},
 	});
 };
-
 
 // 服务器节点分布
 export const apiServerNope = () => {
 	return request({
 		url: '/m-screen/statistics/getServerNope',
 		method: 'get',
-		params: {
-		},
+		params: {},
 	});
 };
-
-
 
 // 服务器剩余资源
 export const apiServerRemainingResources = () => {
 	return request({
 		url: '/m-screen/statistics/getServerRemainingResources',
 		method: 'get',
-		params: {
-		},
+		params: {},
 	});
 };
-
 
 // 预警分布环比
 export const apiWarningCategory = () => {
 	return request({
 		url: '/m-screen/statistics/getWarningCategory',
 		method: 'get',
-		params: {
-		},
+		params: {},
 	});
 };
 
@@ -94,8 +78,7 @@ export const apiErrorCategory = () => {
 	return request({
 		url: '/m-screen/statistics/getErrorCategory',
 		method: 'get',
-		params: {
-		},
+		params: {},
 	});
 };
 
@@ -104,8 +87,7 @@ export const apiOrderStatus = () => {
 	return request({
 		url: '/m-screen/statistics/getOrderStatus',
 		method: 'get',
-		params: {
-		},
+		params: {},
 	});
 };
 
@@ -114,8 +96,7 @@ export const apiServerCategory = () => {
 	return request({
 		url: '/m-screen/statistics/getServerCategory',
 		method: 'get',
-		params: {
-		},
+		params: {},
 	});
 };
 
@@ -124,8 +105,7 @@ export const apiWarningTrend = () => {
 	return request({
 		url: '/m-screen/statistics/getWarningTrend',
 		method: 'get',
-		params: {
-		},
+		params: {},
 	});
 };
 
@@ -134,15 +114,6 @@ export const apiOrderTypeTrend = () => {
 	return request({
 		url: '/m-screen/statistics/getOrderTypeTrend',
 		method: 'get',
-		params: {
-		},
+		params: {},
 	});
 };
-
-
-
-
-
-
-
-
