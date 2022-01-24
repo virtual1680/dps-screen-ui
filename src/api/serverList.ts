@@ -27,7 +27,7 @@ export const apiWarningList = (params: Params) => {
 };
 
 // 工单列表
-export const apiOrderList = params => {
+export const apiOrderList = (params: Params) => {
 	return request({
 		url: '/m-screen/statistics/getOrderList',
 		method: 'get',

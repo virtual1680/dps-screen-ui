@@ -22,7 +22,7 @@ export default defineComponent({
 	setup(props) {
 		let lineChart = ref(null);
 		let { proxy } = getInstance();
-		let chart: ECharts | null = null;
+		let chart: ECharts;
 
 		const chartAnim = () => {
 			chart?.clear();

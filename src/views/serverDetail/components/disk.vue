@@ -10,7 +10,7 @@ export default defineComponent({
 	setup(props) {
 		let timer: NodeJS.Timer | null = null;
 		let lineChart = ref(null);
-		let chart: ECharts | null = null;
+		let chart: ECharts;
 		let dataZoomLength = 10;
 		let dataZoomTime = 3000;
 		let zoomLoop: NodeJS.Timer | null = null;

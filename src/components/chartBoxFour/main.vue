@@ -3,7 +3,7 @@
 		<div class="header">
 			<div class="left">
 				<img class="icon" src="./img/title-tip.png" alt="" />
-				<span class="title">{{ data[type].title }}</span>
+				<span class="title">{{ data.get(`${type}`).title }}</span>
 			</div>
 			<img class="more" src="./img/enlarge.png" alt="" />
 		</div>
@@ -14,7 +14,7 @@
 </template>
 <script lang="ts">
 // 第三级弹窗 右边 box
-import { defineComponent, reactive } from 'vue';
+import { defineComponent } from 'vue';
 enum SChartType {
 	broadband = 'broadband', //内网宽带
 	exampleIops = 'example-iops', //实例iops
@@ -30,12 +30,11 @@ export default defineComponent({
 		},
 	},
 	setup() {
-		let data = reactive({
-			broadband: { title: '内网宽带(BIT/S)' },
-			exampleIops: { title: '实例云盘IOPS(次/S)' },
-			ecsConnect: { title: 'ECS同时连接数(T/S)' },
-			exampleRw: { title: '实例云盘读写' },
-		});
+		let data = new Map();
+		data.set('broadband', { title: '内网宽带(BIT/S)' });
+		data.set('exampleIops', { title: '实例云盘IOPS(次/S)' });
+		data.set('ecsConnect', { title: 'ECS同时连接数(T/S)' });
+		data.set('exampleRw', { title: '实例云盘读写' });
 		return { data };
 	},
 });

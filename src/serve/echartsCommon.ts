@@ -1,5 +1,8 @@
 import { onMounted, getCurrentInstance, ComponentInternalInstance, Ref } from 'vue';
 import { ECharts, EChartsOption, DataZoomComponentOption, EChartOption } from 'echarts';
+
+export type MyEChartsOption = EChartsOption & { currentIndex: number };
+
 export const getInstance = (): ComponentInternalInstance => {
 	return getCurrentInstance() as ComponentInternalInstance;
 };
@@ -25,9 +28,10 @@ export const initChart = (
 export const dynamic = (
 	timer: NodeJS.Timer | null,
 	chart: ECharts,
-	op: EChartsOption & { currentIndex: number },
+	_op: EChartsOption,
 	sec: number,
 ) => {
+	let op = _op as MyEChartsOption;
 	op.currentIndex = -1;
 	const fn = () => {
 		if (op.series) {

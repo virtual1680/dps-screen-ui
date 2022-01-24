@@ -6,8 +6,8 @@
 <script lang="ts">
 // cpu使用率
 import ChartBox from '@components/chartBoxThree/main.vue';
-import { defineComponent, onMounted, watch, ref, getCurrentInstance, toRefs } from 'vue';
-import { EChartsOption, DataZoomComponentOption } from 'echarts';
+import { defineComponent, onMounted, watch, ref, getCurrentInstance } from 'vue';
+import { ECharts } from 'echarts';
 
 export default defineComponent({
 	name: 'serverNode',
@@ -21,7 +21,7 @@ export default defineComponent({
 	setup(props) {
 		let lineChart = ref(null);
 		let { proxy } = getCurrentInstance() as any;
-		let chart: any = null;
+		let chart: ECharts;
 
 		const initChart = () => {
 			//使用主题初始化

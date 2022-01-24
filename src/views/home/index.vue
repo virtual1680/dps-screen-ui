@@ -18,7 +18,23 @@ import warningTrend from './components/home/warningTrend/index.vue';
 
 // 服务器列表
 import serverPage from '../serverPage/index.vue';
-
+interface LeftTopData {
+	serverNum: number;
+	deviceOnLine: number;
+	deviceOffLine: number;
+	todayWorkOrder: number;
+	yesterdayWorkOrder: number;
+}
+interface RightItem {
+	rangeValue: number;
+	value: number;
+}
+interface RightTopData {
+	yesterdayAlarm: RightItem;
+	todayAlarm: RightItem;
+	thisWeekAlarm: RightItem;
+	thisMonthAlarm: RightItem;
+}
 import { apiLeftTopTags, apiRightTopTags, apiOrderStatusTrend } from '@/api/home';
 export default defineComponent({
 	name: 'home',
@@ -42,8 +58,19 @@ export default defineComponent({
 	setup() {
 		let data = reactive({
 			serverPageShow: false,
-			leftTopData: {},
-			rightTopData: {},
+			leftTopData: {
+				serverNum: 0,
+				deviceOnLine: 0,
+				deviceOffLine: 0,
+				todayWorkOrder: 0,
+				yesterdayWorkOrder: 0,
+			},
+			rightTopData: {
+				yesterdayAlarm: { rangeValue: 0, value: 0 },
+				todayAlarm: { rangeValue: 0, value: 0 },
+				thisWeekAlarm: { rangeValue: 0, value: 0 },
+				thisMonthAlarm: { rangeValue: 0, value: 0 },
+			},
 			orderStatusData: {},
 		});
 
@@ -59,13 +86,13 @@ export default defineComponent({
 		// 左上标签数据接口
 		const getLeftTopData = () => {
 			apiLeftTopTags().then(res => {
-				data.leftTopData = res.data;
+				data.leftTopData = res.data as LeftTopData;
 			});
 		};
 		// 右上标签数据接口
 		const getRightTopTags = () => {
 			apiRightTopTags().then(res => {
-				data.rightTopData = res.data;
+				data.rightTopData = res.data as RightTopData;
 			});
 		};
 		// 工单状态

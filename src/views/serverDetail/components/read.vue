@@ -1,7 +1,7 @@
 <script lang="ts">
 import ChartBox from '@components/chartBoxThree/main.vue';
 import { defineComponent, onMounted, ref, watch } from 'vue';
-import { EChartsOption, EChartOption } from 'echarts';
+import { EChartsOption, EChartOption, ECharts } from 'echarts';
 import { dynamic, updateChart, initChart } from '@/serve/echartsCommon';
 interface DataItem {
 	name: string;
@@ -14,7 +14,7 @@ export default defineComponent({
 	setup(props) {
 		let timer: any = null;
 		let lineChart = ref(null);
-		let chart: any = null;
+		let chart: ECharts;
 		let dataZoomLength = 10;
 		let dataZoomTime = 3000;
 		let zoomLoop: any = null;

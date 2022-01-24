@@ -23,7 +23,7 @@ export default defineComponent({
 	setup(_, { emit }) {
 		let timer: NodeJS.Timer | null = null;
 		let lineChart = ref(null);
-		let chart: ECharts | null = null;
+		let chart: ECharts;
 		let zoomLoop: any = null;
 		let echartData: any = [];
 		let totalCount = 0;

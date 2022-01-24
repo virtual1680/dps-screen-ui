@@ -32,7 +32,8 @@ export default {
 				const selectWrap = el.querySelector('.el-table__body-wrapper');
 				selectWrap.addEventListener('scroll', function () {
 					let sign = 0;
-					const scrollDistance = this.scrollHeight - this.scrollTop - this.clientHeight;
+					const scrollDistance =
+						selectWrap.scrollHeight - selectWrap.scrollTop - selectWrap.clientHeight;
 					if (scrollDistance <= sign) {
 						binding.value();
 					}

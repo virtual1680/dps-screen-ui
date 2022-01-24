@@ -20,7 +20,7 @@ export default defineComponent({
 		let echartData: any = [];
 		let lineChart = ref(null);
 		const instance = getInstance();
-		let chart: ECharts | null = null;
+		let chart: ECharts;
 		let zoomLoop: any = null;
 		let xAxisData: any = [];
 

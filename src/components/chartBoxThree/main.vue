@@ -2,11 +2,11 @@
 	<div class="chart-three-box">
 		<div class="header">
 			<img class="icon" src="./img/title-tip.png" alt="" />
-			<span class="title">{{ data[type].title }}</span>
+			<span class="title">{{ data.get(`${type}`).title }}</span>
 		</div>
 		<div
 			class="content"
-			:style="`background:url(${data[type].bg}) no-repeat;background-size: 100% 100%;`">
+			:style="`background:url(${data.get(`${type}`).bg}) no-repeat;background-size: 100% 100%;`">
 			<slot></slot>
 		</div>
 	</div>
@@ -30,27 +30,26 @@ export default defineComponent({
 		},
 	},
 	setup() {
-		let data = reactive({
-			diskUsage: {
-				title: '磁盘使用率',
-				bg: new URL('./img/hardware-bg.png', import.meta.url).href,
-			},
-			cpu: {
-				title: 'CPU使用率',
-				bg: new URL('./img/cpu-bg.png', import.meta.url).href,
-			},
-			performance: {
-				title: '进程占比',
-				bg: new URL('./img/performance-bg.png', import.meta.url).href,
-			},
-			memory: {
-				title: '内存使用率',
-				bg: new URL('./img/disk-bg.png', import.meta.url).href,
-			},
-			read: {
-				title: '当前进程',
-				bg: new URL('./img/read-bg.png', import.meta.url).href,
-			},
+		let data = new Map();
+		data.set('diskUsage', {
+			title: '磁盘使用率',
+			bg: new URL('./img/hardware-bg.png', import.meta.url).href,
+		});
+		data.set('cpu', {
+			title: 'CPU使用率',
+			bg: new URL('./img/cpu-bg.png', import.meta.url).href,
+		});
+		data.set('performance', {
+			title: '进程占比',
+			bg: new URL('./img/performance-bg.png', import.meta.url).href,
+		});
+		data.set('memory', {
+			title: '内存使用率',
+			bg: new URL('./img/disk-bg.png', import.meta.url).href,
+		});
+		data.set('read', {
+			title: '当前进程',
+			bg: new URL('./img/read-bg.png', import.meta.url).href,
 		});
 		return { data };
 	},

@@ -1,12 +1,14 @@
 <template>
-  <div class="chart-one-box">
-    <div class="header">
-      <span>{{ data[type].title }}</span>
-    </div>
-    <div class="content" :style="`background:url(${data[type].bg}) no-repeat;background-size: 100% 100%;`">
-      <slot></slot>
-    </div>
-  </div>
+	<div class="chart-one-box">
+		<div class="header">
+			<span>{{ data.get(`${type}`).title }}</span>
+		</div>
+		<div
+			class="content"
+			:style="`background:url(${data.get(`${type}`).bg}) no-repeat;background-size: 100% 100%;`">
+			<slot></slot>
+		</div>
+	</div>
 </template>
 <script lang="ts">
 // 环 饼图 box
@@ -27,27 +29,26 @@ export default defineComponent({
 		},
 	},
 	setup() {
-		let data = reactive({
-			serve: {
-				title: '服务器节点分布',
-				bg: new URL('./img/serve.png', import.meta.url).href,
-			},
-			device: {
-				title: '设备信息',
-				bg: new URL('./img/device.png', import.meta.url).href,
-			},
-			workOrder: {
-				title: '工单故障占比',
-				bg: new URL('./img/work-order.png', import.meta.url).href,
-			},
-			early: {
-				title: '预警分布环比',
-				bg: new URL('./img/early.png', import.meta.url).href,
-			},
-			earlyError: {
-				title: '预警异常分布',
-				bg: new URL('./img/early-error.png', import.meta.url).href,
-			},
+		let data = new Map();
+		data.set('serve', {
+			title: '服务器节点分布',
+			bg: new URL('./img/serve.png', import.meta.url).href,
+		});
+		data.set('device', {
+			title: '设备信息',
+			bg: new URL('./img/device.png', import.meta.url).href,
+		});
+		data.set('workOrder', {
+			title: '工单故障占比',
+			bg: new URL('./img/work-order.png', import.meta.url).href,
+		});
+		data.set('early', {
+			title: '预警分布环比',
+			bg: new URL('./img/early.png', import.meta.url).href,
+		});
+		data.set('earlyError', {
+			title: '预警异常分布',
+			bg: new URL('./img/early-error.png', import.meta.url).href,
 		});
 		return { data };
 	},

@@ -1,13 +1,13 @@
 <template>
 	<div class="early-num-box">
-		<div class="icon"><img :src="data[type].icon" alt="" /></div>
+		<div class="icon"><img :src="data.get(`${type}`).icon" alt="" /></div>
 		<div class="info">
 			<div>
-				<div class="title">{{ data[type].name }}预警</div>
+				<div class="title">{{ data.get(`${type}`).name }}预警</div>
 				<div class="num">{{ num.value }}</div>
 			</div>
 			<div class="compare">
-				<div class="label">{{ data[type].des }}</div>
+				<div class="label">{{ data.get(`${type}`).des }}</div>
 				<div class="value">
 					<img :src="compare[num.trend == 0 ? 'up' : 'down']" alt="" />
 					{{ num.rangeValue }}
@@ -34,42 +34,38 @@ export default defineComponent({
 				value: 0,
 			},
 		},
-		// percent: {
-		// 	type: Number || String,
-		// 	default: 100,
-		// },
 		type: {
 			type: String,
 			default: EarlyType.yesterday,
 		},
 	},
 	setup() {
+		let data = new Map();
+		data.set('yesterday', {
+			name: '昨日',
+			icon: new URL('./img/yesterday.png', import.meta.url).href,
+			des: '同比昨日',
+		});
+		data.set('today', {
+			name: '今日',
+			icon: new URL('./img/day.png', import.meta.url).href,
+			des: '同比昨日',
+		});
+		data.set('week', {
+			name: '本周',
+			icon: new URL('./img/week.png', import.meta.url).href,
+			des: '同比上周',
+		});
+		data.set('month', {
+			name: '本月',
+			icon: new URL('./img/month.png', import.meta.url).href,
+			des: '同比上月',
+		});
 		let compare = reactive({
 			up: new URL('./img/up.png', import.meta.url).href,
 			down: new URL('./img/down.png', import.meta.url).href,
 		});
-		let data = reactive({
-			yesterday: {
-				name: '昨日',
-				icon: new URL('./img/yesterday.png', import.meta.url).href,
-				des: '同比昨日',
-			},
-			today: {
-				name: '今日',
-				icon: new URL('./img/day.png', import.meta.url).href,
-				des: '同比昨日',
-			},
-			week: {
-				name: '本周',
-				icon: new URL('./img/week.png', import.meta.url).href,
-				des: '同比上周',
-			},
-			month: {
-				name: '本月',
-				icon: new URL('./img/month.png', import.meta.url).href,
-				des: '同比上月',
-			},
-		});
+
 		return { data, compare };
 	},
 });

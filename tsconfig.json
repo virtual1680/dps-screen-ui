@@ -6,6 +6,8 @@
     "moduleResolution": "node",
     "strict": true,
     "jsx": "preserve",
+    "noImplicitThis": true,//方法内使用this报错问题
+    "suppressImplicitAnyIndexErrors": true,//解决通过下标获取对象值报错问题 obj[xxx]
     "sourceMap": true,
     "resolveJsonModule": true,
     "esModuleInterop": true,
@@ -23,3 +25,14 @@
     "node_modules"
   ]
 }
+/**
+定义方法获取对象属性值
+function getValue(arg: string) {
+	interface IPerson {
+    [key: string
+    ]: any
+  }
+    return (<IPerson>person)[arg
+  ];
+}
+*/

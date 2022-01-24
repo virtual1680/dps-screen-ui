@@ -12,9 +12,9 @@
 <script lang="ts">
 // 工单状态
 import ChartBoxTwo from '@components/chartBoxTwo/main.vue';
-import { defineComponent, onMounted, reactive, ref, getCurrentInstance, toRefs, watch } from 'vue';
-import { EChartsOption, DataZoomComponentOption } from 'echarts';
-
+import { defineComponent, onMounted, ref, getCurrentInstance } from 'vue';
+import { EChartsOption, ECharts, EChartOption } from 'echarts';
+import { updateChart, dynamic } from '@/serve/echartsCommon';
 import { apiOrderTypeTrend } from '@/api/home';
 
 export default defineComponent({
@@ -27,13 +27,11 @@ export default defineComponent({
 		},
 	},
 	components: { ChartBoxTwo },
-
-	setup(props) {
-		let timer: any = null;
+	setup() {
+		let timer: NodeJS.Timer | null = null;
 		let lineChart = ref(null);
 		let { proxy } = getCurrentInstance() as any;
-		let chart: any = null;
-		let option: object = {};
+		let chart: ECharts;
 		let dataZoomLength = 10;
 		let dataZoomTime = 3000;
 		let zoomLoop: any = null;
@@ -46,11 +44,6 @@ export default defineComponent({
 			let dom = lineChart.value;
 			chart = proxy.$echarts.init(dom);
 		};
-
-		watch(
-			() => props.chartData,
-			(newVal, oldVal) => {},
-		);
 
 		const init = async () => {
 			await getData();
@@ -77,9 +70,16 @@ export default defineComponent({
 			zoomLoop && clearTimeout(zoomLoop);
 			chart.clear();
 			let _option = getOption();
-			chart.setOption(_option);
-			updateChart(_option as EChartsOption);
-			dynamic(chart, _option as EChartsOption, 2000);
+			chart.setOption(_option as EChartOption);
+			updateChart(
+				chart,
+				_option as EChartsOption,
+				xAxisData,
+				dataZoomLength,
+				zoomLoop,
+				dataZoomTime,
+			);
+			dynamic(timer, chart, _option as EChartsOption, 2000);
 		};
 
 		const getOption = () => {
@@ -220,61 +220,6 @@ export default defineComponent({
 				series: _seriesData,
 			};
 			return option;
-		};
-		// 当 line  bar 数据过多是启动轮询
-		const updateChart = (option: EChartsOption) => {
-			let xAxisName = xAxisData;
-
-			let fn = () => {
-				if (xAxisName.length <= dataZoomLength + 1) {
-					zoomLoop && clearTimeout(zoomLoop);
-					return;
-				}
-				// 每次向后滚动一个，最后一个从头开始。
-				let zoom = option.dataZoom as DataZoomComponentOption[];
-				if ((zoom[0].endValue as number) >= xAxisName.length - 1) {
-					option.dataZoom[0].endValue = dataZoomLength;
-					option.dataZoom[0].startValue = 0;
-				} else {
-					option.dataZoom[0].endValue = option.dataZoom[0].endValue + 1;
-					option.dataZoom[0].startValue = option.dataZoom[0].startValue + 1;
-				}
-				chart.setOption(option);
-				zoomLoop && clearTimeout(zoomLoop);
-				zoomLoop = setTimeout(fn, dataZoomTime);
-			};
-			// 启动
-			setTimeout(fn, dataZoomTime);
-		};
-		// tooltip自动轮询
-		const dynamic = (chart, op: EChartsOption, sec: number) => {
-			op.currentIndex = -1;
-			const fn = () => {
-				let dataLen = op.series[0].data.length;
-				if (dataLen <= 0) return;
-				// 取消之前高亮的图形
-				chart.dispatchAction({
-					type: 'downplay',
-					seriesIndex: 0,
-					dataIndex: op.currentIndex,
-				});
-				op.currentIndex = (op.currentIndex + 1) % dataLen;
-				// 高亮当前图形
-				chart.dispatchAction({
-					type: 'highlight',
-					seriesIndex: 0,
-					dataIndex: op.currentIndex,
-				});
-				// 显示 tooltip
-				chart.dispatchAction({
-					type: 'showTip',
-					seriesIndex: 0,
-					dataIndex: op.currentIndex,
-				});
-				timer && clearTimeout(timer);
-				timer = setTimeout(fn, sec);
-			};
-			timer = setTimeout(fn, sec);
 		};
 
 		return {

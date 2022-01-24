@@ -11,7 +11,7 @@ export default defineComponent({
 		let timer: NodeJS.Timer | null = null;
 		let lineChart = ref(null);
 		let { proxy } = getInstance();
-		let chart: ECharts | null = null;
+		let chart: ECharts;
 		let dataZoomLength = 10;
 		let dataZoomTime = 3000;
 		let zoomLoop: NodeJS.Timer | null = null;

@@ -7,7 +7,6 @@
 // 服务器
 import ServeSource from './serveSource/index.vue';
 import { defineComponent, onMounted, ref, getCurrentInstance } from 'vue';
-import { EChartsOption, DataZoomComponentOption } from 'echarts';
 
 import { apiServerRemainingResources } from '@/api/home';
 

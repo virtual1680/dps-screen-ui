@@ -20,7 +20,7 @@ export default defineComponent({
 	components: { ChartBox },
 	setup(props) {
 		let lineChart = ref(null);
-		let chart: ECharts | null = null;
+		let chart: ECharts;
 
 		watch(
 			() => props.data,

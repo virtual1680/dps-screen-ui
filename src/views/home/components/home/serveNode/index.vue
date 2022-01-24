@@ -6,10 +6,10 @@
 <script lang="ts">
 // 服务器节点分布
 import ChartBox from '@components/chartBoxOne/main.vue';
-import { defineComponent, onMounted, reactive, ref, getCurrentInstance, toRefs } from 'vue';
-import { EChartsOption, DataZoomComponentOption } from 'echarts';
-
-import {apiServerNope} from "@/api/home"
+import { defineComponent, onMounted, ref, getCurrentInstance } from 'vue';
+import { EChartsOption } from 'echarts';
+import { dynamic } from '@/serve/echartsCommon';
+import { apiServerNope } from '@/api/home';
 
 export default defineComponent({
 	name: 'serverNode',
@@ -21,20 +21,14 @@ export default defineComponent({
 		},
 	},
 	components: { ChartBox },
-	setup(props) {
+	setup() {
 		let lineChart = ref(null);
-		let timer:any = null
+		let timer: NodeJS.Timer;
 		let { proxy } = getCurrentInstance() as any;
 		let chart: any = null;
-		let option: object = {};
-		let dataZoomLength = 7;
-		let dataZoomTime = 3000;
 		let zoomLoop: any = null;
-		let xAxisData: any = [];
 
-    let echartData:any = [];
-
-
+		let echartData: any = [];
 
 		const initChart = () => {
 			//使用主题初始化
@@ -42,7 +36,7 @@ export default defineComponent({
 			chart = proxy.$echarts.init(dom);
 		};
 		const init = async () => {
-      await getData()
+			await getData();
 			initChart();
 			chartAnim();
 		};
@@ -54,37 +48,43 @@ export default defineComponent({
 				chart && chart.resize();
 			});
 		});
-    // 获取数据
-    const getData = async ()=>{
-      await apiServerNope().then(res=>{
-				let data = res.data
-				
-				echartData = data.map((item:any)=>{
-					return{
-						name:item.type,
-						value:item.value
-					}
-				})
-      })
-    }
+		// 获取数据
+		const getData = async () => {
+			await apiServerNope().then(res => {
+				let data = res.data;
 
-
-
+				echartData = data.map((item: any) => {
+					return {
+						name: item.type,
+						value: item.value,
+					};
+				});
+			});
+		};
 
 		const chartAnim = () => {
 			zoomLoop && clearTimeout(zoomLoop);
 			chart.clear();
 			let _option = getOption();
 			chart.setOption(_option);
-      dynamic(chart, _option as EChartsOption,5000);
+			dynamic(timer, chart, _option as EChartsOption, 5000);
 		};
 		const getOption = () => {
 			let color = [
-				'#00E4FF','#0B9AA8','#00BDFF','#FFFFFF','#7DF5FF',
-				'#0E7CE2', '#FF8352', '#E271DE', '#F8456B', '#00FFFF', '#4AEAB0'
+				'#00E4FF',
+				'#0B9AA8',
+				'#00BDFF',
+				'#FFFFFF',
+				'#7DF5FF',
+				'#0E7CE2',
+				'#FF8352',
+				'#E271DE',
+				'#F8456B',
+				'#00FFFF',
+				'#4AEAB0',
 			];
 			let option = {
-        color: color,
+				color: color,
 				tooltip: {
 					show: true,
 					trigger: 'item',
@@ -96,11 +96,10 @@ export default defineComponent({
 						fontSize: 12,
 						color: '#FBFAFB',
 					},
-					// formatter: function (params){}
 				},
 				legend: {
 					top: '1%',
-					show:false,
+					show: false,
 				},
 				grid: {
 					left: '2%',
@@ -108,8 +107,6 @@ export default defineComponent({
 					bottom: '2%',
 					top: '2%',
 					containLabel: true,
-					// backgroundColor: "rgba(0,0,0,0.2)",
-					// borderWidth: 0
 				},
 
 				series: [
@@ -118,64 +115,33 @@ export default defineComponent({
 						type: 'pie',
 						radius: '50%',
 						data: echartData,
-            label: {
-              formatter: '{name|{b}}\n{prent|{d}}%',
-              fontSize:12,
-              color:"#5399AF",
+						label: {
+							formatter: '{name|{b}}\n{prent|{d}}%',
+							fontSize: 12,
+							color: '#5399AF',
 							rich: {
 								name: {
 									fontSize: 12,
-									color: '#A8DFFF'
+									color: '#A8DFFF',
 								},
 								prent: {
 									fontSize: 14,
-									color: '#00E4FF'
-								}
-							}
-            },
+									color: '#00E4FF',
+								},
+							},
+						},
 						emphasis: {
 							itemStyle: {
 								shadowBlur: 10,
 								shadowOffsetX: 0,
-								shadowColor: 'rgba(0, 0, 0, 0.5)'
-							}
-						}
-					}
-				]
+								shadowColor: 'rgba(0, 0, 0, 0.5)',
+							},
+						},
+					},
+				],
 			};
 			return option;
 		};
-    // tooltip自动轮询
-    const dynamic = (chart, op:EChartsOption, sec:number)=>{
-			op.currentIndex = -1;
-			const fn = () => {
-					let dataLen = op.series[0].data.length;
-					if (dataLen <= 0) return;
-					// 取消之前高亮的图形
-					chart.dispatchAction({
-						type: "downplay",
-						seriesIndex: 0,
-						dataIndex: op.currentIndex,
-					});
-					op.currentIndex = (op.currentIndex + 1) % dataLen;
-					// 高亮当前图形
-					chart.dispatchAction({
-						type: "highlight",
-						seriesIndex: 0,
-						dataIndex: op.currentIndex,
-					});
-					// 显示 tooltip
-					chart.dispatchAction({
-						type: "showTip",
-						seriesIndex: 0,
-						dataIndex: op.currentIndex,
-					});
-					timer && clearTimeout(timer);
-					timer = setTimeout(fn, sec);
-			};
-      timer = setTimeout(fn, sec);
-    }
-
 
 		return {
 			lineChart,

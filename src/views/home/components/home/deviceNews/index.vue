@@ -11,9 +11,9 @@
 </template>
 <script lang="ts">
 import ChartBox from '@components/chartBoxOne/main.vue';
-import { defineComponent, onMounted, reactive, ref, getCurrentInstance, toRefs, watch } from 'vue';
-import { EChartsOption, DataZoomComponentOption } from 'echarts';
-
+import { defineComponent, onMounted, ref, getCurrentInstance, watch } from 'vue';
+import { ECharts, EChartOption, EChartsOption } from 'echarts';
+import { dynamic } from '@/serve/echartsCommon';
 import { apiDeviceInfo } from '@/api/home';
 
 export default defineComponent({
@@ -28,15 +28,11 @@ export default defineComponent({
 	components: { ChartBox },
 
 	setup(props) {
-		let timer: any = null;
+		let timer: NodeJS.Timer | null = null;
 		let lineChart = ref(null);
 		let { proxy } = getCurrentInstance() as any;
-		let chart: any = null;
-		let option: object = {};
-		let dataZoomLength = 7;
-		let dataZoomTime = 3000;
+		let chart: ECharts;
 		let zoomLoop: any = null;
-		let xAxisData: any = [];
 
 		let echartData: any = [];
 		let totalCount = 0;
@@ -83,17 +79,14 @@ export default defineComponent({
 			zoomLoop && clearTimeout(zoomLoop);
 			chart.clear();
 			let _option = getOption();
-			chart.setOption(_option);
-			dynamic(chart, _option as EChartsOption, 5000);
+			chart.setOption(_option as EChartOption);
+			dynamic(timer, chart, _option as EChartsOption, 5000);
 		};
 
 		const formatNumber = (num: any) => {
 			let reg = /(?=(\B)(\d{3})+$)/g;
 			return num.toString().replace(reg, ',');
 		};
-		let total = echartData.reduce((a: any, b: any) => {
-			return a + b.value * 1;
-		}, 0);
 
 		const getOption = () => {
 			let color = [
@@ -162,18 +155,11 @@ export default defineComponent({
 					},
 					itemWidth: 12,
 					itemHeight: 5,
-					// formatter: function (name:string){
-					//   console.log(name)
-					//   return name
-					// }
 				},
 				grid: {
 					left: '0%',
 					top: '0%',
 					containLabel: true,
-
-					// backgroundColor: "rgba(0,0,0,0.2)",
-					// borderWidth: 0
 				},
 				series: [
 					{
@@ -197,36 +183,7 @@ export default defineComponent({
 			};
 			return option;
 		};
-		// tooltip自动轮询
-		const dynamic = (chart, op: EChartsOption, sec: number) => {
-			op.currentIndex = -1;
-			const fn = () => {
-				let dataLen = op.series[0].data.length;
-				if (dataLen <= 0) return;
-				// 取消之前高亮的图形
-				chart.dispatchAction({
-					type: 'downplay',
-					seriesIndex: 0,
-					dataIndex: op.currentIndex,
-				});
-				op.currentIndex = (op.currentIndex + 1) % dataLen;
-				// 高亮当前图形
-				chart.dispatchAction({
-					type: 'highlight',
-					seriesIndex: 0,
-					dataIndex: op.currentIndex,
-				});
-				// 显示 tooltip
-				chart.dispatchAction({
-					type: 'showTip',
-					seriesIndex: 0,
-					dataIndex: op.currentIndex,
-				});
-				timer && clearTimeout(timer);
-				timer = setTimeout(fn, sec);
-			};
-			timer = setTimeout(fn, sec);
-		};
+
 		return {
 			lineChart,
 		};

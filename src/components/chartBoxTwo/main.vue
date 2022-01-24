@@ -1,20 +1,25 @@
 <template>
-  <div class="chart-two-box">
-    <div class="header">
-      <div class="title">
-        <img src="./img/title-icon.png" alt="">
-        {{ data[type].title }}
-      </div>
-      <div class="detail"><img src="./img/detail.png" alt="">详情</div>
-    </div>
-    <div class="content" :style="`background:url(${data['early'].bg}) no-repeat;background-size: 100% 100%;`">
-      <slot></slot>
-    </div>
-  </div>
+	<div class="chart-two-box">
+		<div class="header">
+			<div class="title">
+				<img src="./img/title-icon.png" alt="" />
+				{{ data.get(`${type}`).title }}
+			</div>
+			<div class="detail">
+				<img src="./img/detail.png" alt="" />
+				详情
+			</div>
+		</div>
+		<div
+			class="content"
+			:style="`background:url(${data.get(`${type}`).bg}) no-repeat;background-size: 100% 100%;`">
+			<slot></slot>
+		</div>
+	</div>
 </template>
 <script lang="ts">
 // 柱状 折线图 box
-import { defineComponent, reactive } from 'vue';
+import { defineComponent } from 'vue';
 enum BChartType {
 	early = 'early',
 	workStatus = 'workStatus',
@@ -29,19 +34,18 @@ export default defineComponent({
 		},
 	},
 	setup() {
-		let data = reactive({
-			early: {
-				title: '预警趋势',
-				bg: new URL('./img/small-bg.png', import.meta.url).href,
-			},
-			workStatus: {
-				title: '工单状态',
-				bg: new URL('./img/big-bg.png', import.meta.url).href,
-			},
-			workData: {
-				title: '工单数据',
-				bg: new URL('./img/small-bg.png', import.meta.url).href,
-			},
+		let data = new Map();
+		data.set('early', {
+			title: '预警趋势',
+			bg: new URL('./img/small-bg.png', import.meta.url).href,
+		});
+		data.set('workStatus', {
+			title: '工单状态',
+			bg: new URL('./img/big-bg.png', import.meta.url).href,
+		});
+		data.set('workData', {
+			title: '工单数据',
+			bg: new URL('./img/small-bg.png', import.meta.url).href,
 		});
 		return { data };
 	},

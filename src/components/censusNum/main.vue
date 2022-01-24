@@ -1,20 +1,20 @@
 <template>
 	<div
 		class="census-box"
-		:style="`background:url(${data[type].bg}) no-repeat;background-size:100% 100%;`">
+		:style="`background:url(${mapData.get(`${type}`).bg}) no-repeat;background-size:100% 100%;`">
 		<div class="content">
 			<div class="info">
-				<div class="title">{{ data[type].name }}</div>
+				<div class="title">{{ mapData.get(`${type}`).name }}</div>
 				<div class="num">{{ num }}</div>
 			</div>
 			<div v-if="type === 'workOrder'" class="info">
-				<div class="title">{{ data[type].name1 }}</div>
+				<div class="title">{{ mapData.get(`${type}`).name1 }}</div>
 				<div class="num">{{ nums }}</div>
 			</div>
 		</div>
 	</div>
 </template>
-<script 	lang="ts">
+<script lang="ts">
 // 统计数据展示
 import { defineComponent, reactive, ref, onMounted } from 'vue';
 enum CensusType {
@@ -40,24 +40,23 @@ export default defineComponent({
 		},
 	},
 	setup(props) {
-		let data = reactive({
-			serve: {
-				name: '服务器数量',
-				bg: new URL('./img/serve.png', import.meta.url).href,
-			},
-			deviceOn: {
-				name: '设备在线数',
-				bg: new URL('./img/device-z.png', import.meta.url).href,
-			},
-			deviceOff: {
-				name: '设备离线数',
-				bg: new URL('./img/device-l.png', import.meta.url).href,
-			},
-			workOrder: {
-				name: '今日工单',
-				name1: '昨日工单',
-				bg: new URL('./img/work.png', import.meta.url).href,
-			},
+		let mapData = new Map();
+		mapData.set('serve', {
+			name: '服务器数量',
+			bg: new URL('./img/serve.png', import.meta.url).href,
+		});
+		mapData.set('deviceOn', {
+			name: '设备在线数',
+			bg: new URL('./img/device-z.png', import.meta.url).href,
+		});
+		mapData.set('deviceOff', {
+			name: '设备离线数',
+			bg: new URL('./img/device-l.png', import.meta.url).href,
+		});
+		mapData.set('workOrder', {
+			name: '今日工单',
+			name1: '昨日工单',
+			bg: new URL('./img/work.png', import.meta.url).href,
 		});
 		let layout = ref('center');
 		let infoWidth = ref('auto');
@@ -69,7 +68,7 @@ export default defineComponent({
 				infoMargin.value = '-30px';
 			}
 		});
-		return { data, layout, infoWidth, infoMargin };
+		return { layout, infoWidth, infoMargin, mapData };
 	},
 });
 </script>
