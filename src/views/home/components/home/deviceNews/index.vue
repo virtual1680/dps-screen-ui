@@ -39,6 +39,7 @@ export default defineComponent({
 		let xAxisData: any = [];
 
 		let echartData: any = [];
+		let totalCount = 0;
 
 		const initChart = () => {
 			//使用主题初始化
@@ -68,6 +69,7 @@ export default defineComponent({
 		const getData = async () => {
 			await apiDeviceInfo().then(res => {
 				let data = res.data.percentage;
+				totalCount = res.data.totalCount;
 				echartData = data.map((item: any) => {
 					return {
 						name: item.type,
@@ -112,7 +114,7 @@ export default defineComponent({
 
 				title: [
 					{
-						text: '{name|总量}\n{val|' + formatNumber(total) + '}',
+						text: '{name|总量}\n{val|' + formatNumber(totalCount) + '}',
 						top: '25%',
 						left: 'center',
 						textStyle: {

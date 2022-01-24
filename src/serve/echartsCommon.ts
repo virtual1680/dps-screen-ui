@@ -1,5 +1,5 @@
-import { onMounted, getCurrentInstance, ComponentInternalInstance } from 'vue';
-
+import { onMounted, getCurrentInstance, ComponentInternalInstance, Ref } from 'vue';
+import { ECharts, EChartsOption, DataZoomComponentOption, EChartOption } from 'echarts';
 export const getInstance = (): ComponentInternalInstance => {
 	return getCurrentInstance() as ComponentInternalInstance;
 };
@@ -12,7 +12,8 @@ export const initChart = (
 ): ECharts => {
 	let { proxy } = instance || getInstance();
 	let dom = lineChart.value;
-	chart = proxy.$echarts.init(dom);
+	let echarts = proxy?.$echarts as ECharts & { init: any };
+	chart = echarts.init(dom);
 	window.addEventListener('resize', function () {
 		// 让我们的图表调用 resize这个方法
 		chart && chart.resize();

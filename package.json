@@ -5,7 +5,8 @@
   "scripts": {
     "auto": "node ./autoDeploy.js",
     "dev": "vite --host 0.0.0.0",
-    "build": "vue-tsc --noEmit && vite build",
+    "build": "vite build",
+    "build-tsc": "vue-tsc --noEmit && vite build",
     "preview": "vite preview"
   },
   "dependencies": {
