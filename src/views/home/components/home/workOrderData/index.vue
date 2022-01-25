@@ -13,7 +13,7 @@
 // 工单状态
 import ChartBoxTwo from '@components/chartBoxTwo/main.vue';
 import { defineComponent, onMounted, ref, getCurrentInstance } from 'vue';
-import { EChartsOption, ECharts, EChartOption } from 'echarts';
+import { EChartsOption, ECharts } from 'echarts';
 import { updateChart, dynamic } from '@/serve/echartsCommon';
 import { apiOrderTypeTrend } from '@/api/home';
 
@@ -70,7 +70,7 @@ export default defineComponent({
 			zoomLoop && clearTimeout(zoomLoop);
 			chart.clear();
 			let _option = getOption();
-			chart.setOption(_option as EChartOption);
+			chart.setOption(_option as any);
 			updateChart(
 				chart,
 				_option as EChartsOption,

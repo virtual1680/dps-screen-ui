@@ -10,7 +10,6 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "@types/echarts": "^4.9.13",
     "@types/js-cookie": "^3.0.1",
     "@types/js-md5": "^0.4.3",
     "@types/vue-router": "^2.0.0",

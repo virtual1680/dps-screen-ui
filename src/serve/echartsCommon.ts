@@ -1,5 +1,5 @@
 import { onMounted, getCurrentInstance, ComponentInternalInstance, Ref } from 'vue';
-import { ECharts, EChartsOption, DataZoomComponentOption, EChartOption } from 'echarts';
+import { ECharts, EChartsOption, DataZoomComponentOption } from 'echarts';
 
 export type MyEChartsOption = EChartsOption & { currentIndex: number };
 
@@ -86,7 +86,7 @@ export const updateChart = (
 			zoom[0].endValue = (zoom[0].endValue as number) + 1;
 			zoom[0].startValue = (zoom[0].startValue as number) + 1;
 		}
-		chart?.setOption(option as EChartOption);
+		chart?.setOption(option as any);
 		zoomLoop && clearTimeout(zoomLoop);
 		zoomLoop = setTimeout(fn, dataZoomTime);
 	};

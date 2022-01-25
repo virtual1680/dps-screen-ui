@@ -1,7 +1,7 @@
 <script lang="ts">
 import ChartBox from '@components/chartBoxFour/main.vue';
 import { defineComponent, onMounted, ref, watch } from 'vue';
-import { EChartsOption, ECharts, EChartOption } from 'echarts';
+import { EChartsOption, ECharts } from 'echarts';
 import { dynamic, updateChart, initChart, getInstance } from '@/serve/echartsCommon';
 export default defineComponent({
 	name: 'broadband',
@@ -35,7 +35,7 @@ export default defineComponent({
 			zoomLoop && clearTimeout(zoomLoop);
 			chart?.clear();
 			let _option = getOption();
-			chart?.setOption(_option as EChartOption);
+			chart?.setOption(_option as any);
 			updateChart(
 				chart,
 				_option as EChartsOption,

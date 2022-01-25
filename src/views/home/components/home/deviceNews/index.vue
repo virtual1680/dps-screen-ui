@@ -12,7 +12,7 @@
 <script lang="ts">
 import ChartBox from '@components/chartBoxOne/main.vue';
 import { defineComponent, onMounted, ref, getCurrentInstance, watch } from 'vue';
-import { ECharts, EChartOption, EChartsOption } from 'echarts';
+import { ECharts, EChartsOption } from 'echarts';
 import { dynamic } from '@/serve/echartsCommon';
 import { apiDeviceInfo } from '@/api/home';
 
@@ -79,7 +79,7 @@ export default defineComponent({
 			zoomLoop && clearTimeout(zoomLoop);
 			chart.clear();
 			let _option = getOption();
-			chart.setOption(_option as EChartOption);
+			chart.setOption(_option as any);
 			dynamic(timer, chart, _option as EChartsOption, 5000);
 		};
 
