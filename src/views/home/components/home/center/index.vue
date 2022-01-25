@@ -4,6 +4,7 @@
 		<div class="content">
 			<div @click="enlargeFun" class="box"></div>
 			<iframe
+				v-if="!enlarge"
 				id="iframe"
 				scrolling="no"
 				src="http://122.9.154.184:8899/topology?type=index"
