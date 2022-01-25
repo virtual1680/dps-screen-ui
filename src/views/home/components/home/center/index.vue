@@ -12,6 +12,10 @@
 		<teleport v-if="enlarge" to="body">
 			<div class="center-enlarge">
 				<div class="icon" @click="enlargeFun"><img src="./img/enlarge.png" alt="" /></div>
+				<div class="top"></div>
+				<div class="left"></div>
+				<div class="right"></div>
+				<div class="bottom"></div>
 				<iframe
 					id="iframe"
 					scrolling="no"
@@ -37,11 +41,12 @@ export default defineComponent({
 <style lang="scss" scoped>
 .icon {
 	position: absolute;
+	z-index: 999;
 	right: 1px;
 	top: 1px;
 	img {
-		margin-top: 1px;
-		margin-right: 1px;
+		margin-top: 2px;
+		margin-right: 2px;
 		width: 25px;
 		cursor: pointer;
 	}
@@ -72,7 +77,7 @@ export default defineComponent({
 	}
 }
 .center-enlarge {
-	background: #333840e6;
+	background: rgb(51 56 64 / 65%);
 	z-index: 999999999;
 	position: fixed;
 	width: 1200px;
@@ -81,6 +86,42 @@ export default defineComponent({
 	left: 50%;
 	margin-left: -600px;
 	margin-top: -450px;
+	.top {
+		position: absolute;
+		top: 0;
+		left: 0;
+		width: 90px;
+		height: 60px;
+		border-top: 2px solid #00e4ff;
+		border-left: 2px solid #00e4ff;
+	}
+	.right {
+		position: absolute;
+		right: 0;
+		top: 0;
+		width: 90px;
+		height: 60px;
+		border-top: 2px solid #00e4ff;
+		border-right: 2px solid #00e4ff;
+	}
+	.bottom {
+		position: absolute;
+		bottom: 0;
+		right: 0;
+		width: 90px;
+		height: 60px;
+		border-bottom: 2px solid #00e4ff;
+		border-right: 2px solid #00e4ff;
+	}
+	.left {
+		position: absolute;
+		bottom: 0;
+		left: 0;
+		width: 90px;
+		height: 60px;
+		border-bottom: 2px solid #00e4ff;
+		border-left: 2px solid #00e4ff;
+	}
 	iframe {
 		background: transparent;
 		width: 100%;
