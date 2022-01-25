@@ -74,7 +74,7 @@ export default defineComponent({
 						color: '#FBFAFB',
 					},
 					axisPointer: {
-						type: 'shadow',
+						type: 'none',
 					},
 					formatter: (params: any) => {
 						let item = params.filter((item: any) => item.seriesName != '背景');

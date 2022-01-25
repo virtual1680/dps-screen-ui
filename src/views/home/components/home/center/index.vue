@@ -78,7 +78,7 @@ export default defineComponent({
 	}
 }
 .center-enlarge {
-	background: rgb(51 56 64 / 65%);
+	background: rgb(51 56 64 / 40%);
 	z-index: 999999999;
 	position: fixed;
 	width: 1200px;
