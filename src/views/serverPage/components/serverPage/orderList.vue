@@ -77,8 +77,8 @@ export default defineComponent({
 				<span class="row_icon">{{ scope.row.projectName }}</span>
 			</template>
 		</el-table-column>
+		<el-table-column prop="title" :show-overflow-tooltip="true" label="标题"></el-table-column>
 		<el-table-column prop="type" :show-overflow-tooltip="true" label="问题类型"></el-table-column>
-		<el-table-column prop="title" :show-overflow-tooltip="true" label="预警类型"></el-table-column>
 		<el-table-column prop="name" :show-overflow-tooltip="true" label="处理人"></el-table-column>
 		<el-table-column
 			prop="createTime"
