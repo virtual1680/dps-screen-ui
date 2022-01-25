@@ -11,6 +11,7 @@
 // 服务器分类
 import { defineComponent, onMounted, ref } from 'vue';
 import { EChartsOption, ECharts } from 'echarts';
+import * as echarts from 'echarts';
 import { dynamic, initChart, getInstance } from '@/serve/echartsCommon';
 import { apiServerCategory } from '@/api/home';
 export default defineComponent({
@@ -19,6 +20,7 @@ export default defineComponent({
 		let timer: NodeJS.Timer | null = null;
 		let echartData: any = [];
 		let lineChart = ref(null);
+		const { proxy } = getInstance();
 		const instance = getInstance();
 		let chart: ECharts;
 		let zoomLoop: any = null;
@@ -26,6 +28,7 @@ export default defineComponent({
 
 		const init = async () => {
 			await getData();
+
 			chart = initChart(chart, lineChart, instance);
 			chartAnim();
 		};
@@ -49,7 +52,6 @@ export default defineComponent({
 		};
 
 		const getOption = () => {
-			const echarts = instance.proxy?.$echarts as ECharts & { graphic: any };
 			let salvProName = echartData.map((item: any) => item.name);
 			xAxisData = salvProName;
 			let salvProValue = echartData.map((item: any) => item.count);
@@ -169,7 +171,7 @@ export default defineComponent({
 						zlevel: 1,
 						itemStyle: {
 							borderRadius: 30,
-							color: echarts.graphic.LinearGradient(0, 1, 1, 0, [
+							color: new echarts.graphic.LinearGradient(0, 1, 1, 0, [
 								{ offset: 0, color: 'rgba(0,0,0,0)' },
 								{ offset: 1, color: '#00E8FB' },
 							]),

@@ -10,9 +10,9 @@ const huawei_kunpeng = {
 
 // 测试环境【本地测试环境】
 const local = {
-	host: '10.10.1.24',
+	host: '10.10.1.32',
 	password: 'Leyun@park24',
-	catalog: '/home/web/mp/',
+	catalog: '/usr/share/nginx/html',
 	port: 22,
 	username: 'root',
 	privateKey: null,
