@@ -8,6 +8,7 @@
 import ChartBox from '@components/chartBoxThree/main.vue';
 import { defineComponent, onMounted, ref, watch } from 'vue';
 import { ECharts } from 'echarts';
+import * as echarts from 'echarts';
 import { initChart, getInstance } from '@/serve/echartsCommon';
 export default defineComponent({
 	name: 'memoryUsage',
@@ -40,7 +41,6 @@ export default defineComponent({
 		});
 
 		const getOption = () => {
-			const echarts = proxy?.$echarts as ECharts & { graphic: any };
 			let color = [{ offset: 0.25, color: '#7DF5FF' }];
 			let value = parseFloat(props.data) / 100;
 			if (value <= 1 && value > 0.85) {
@@ -69,7 +69,7 @@ export default defineComponent({
 							show: true,
 							lineStyle: {
 								width: 14,
-								color: [[value, echarts.graphic.LinearGradient(0, 0, 1, 0, color)]],
+								color: [[value, new echarts.graphic.LinearGradient(0, 0, 1, 0, color)]],
 							},
 						},
 						axisLabel: { show: false },

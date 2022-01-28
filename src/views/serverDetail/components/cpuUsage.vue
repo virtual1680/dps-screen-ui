@@ -8,7 +8,7 @@
 import ChartBox from '@components/chartBoxThree/main.vue';
 import { defineComponent, onMounted, watch, ref, getCurrentInstance } from 'vue';
 import { ECharts } from 'echarts';
-
+import * as echarts from 'echarts';
 export default defineComponent({
 	name: 'serverNode',
 	props: {
@@ -76,7 +76,7 @@ export default defineComponent({
 							show: true,
 							lineStyle: {
 								width: 14,
-								color: [[value, proxy.$echarts.graphic.LinearGradient(0, 0, 1, 0, color)]],
+								color: [[value, new echarts.graphic.LinearGradient(0, 0, 1, 0, color)]],
 							},
 						},
 						axisLabel: { show: false },

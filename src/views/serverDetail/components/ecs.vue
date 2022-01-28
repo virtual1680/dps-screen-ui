@@ -2,6 +2,7 @@
 import ChartBox from '@components/chartBoxFour/main.vue';
 import { defineComponent, onMounted, ref, watch } from 'vue';
 import { EChartsOption, ECharts } from 'echarts';
+import * as echarts from 'echarts';
 import { dynamic, updateChart, initChart, getInstance } from '@/serve/echartsCommon';
 export default defineComponent({
 	name: 'ecs',
@@ -59,7 +60,6 @@ export default defineComponent({
 				'rgba(255, 255, 255,',
 			];
 			let _seriesData: any = [];
-			const echarts = proxy?.$echarts as ECharts & { graphic: any };
 			echartData.forEach((list: any, k: number) => {
 				_seriesData.push({
 					name: list.name,
@@ -75,7 +75,7 @@ export default defineComponent({
 					},
 					areaStyle: {
 						//区域填充样式
-						color: echarts.graphic.LinearGradient(0, 1, 0, 0, [
+						color: new echarts.graphic.LinearGradient(0, 1, 0, 0, [
 							{ offset: 0, color: _areaColor[k] + ' 0.1)' },
 							{ offset: 1, color: _areaColor[k] + '0.5)' },
 						]),

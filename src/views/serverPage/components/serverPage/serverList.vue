@@ -98,7 +98,7 @@ export default defineComponent({
 				<span class="row_icon">{{ scope.row.serverName }}</span>
 			</template>
 		</el-table-column>
-		<el-table-column prop="ip" :show-overflow-tooltip="true" label="IP地址"></el-table-column>
+		<el-table-column prop="ip" :show-overflow-tooltip="true" label="预警内容"></el-table-column>
 		<el-table-column prop="publicIp" :show-overflow-tooltip="true" label="公网IP"></el-table-column>
 		<el-table-column prop="config" :show-overflow-tooltip="true" label="配置"></el-table-column>
 		<el-table-column prop="cpu" :show-overflow-tooltip="true" label="cpu占用"></el-table-column>
