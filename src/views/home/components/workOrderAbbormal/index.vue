@@ -117,7 +117,7 @@ export default defineComponent({
 					right: '6%',
 					orient: 'vertical',
 					textStyle: {
-						fontSize: 14,
+						fontSize: 12,
 						fontWeight: 400,
 						color: '#00E4FF',
 					},

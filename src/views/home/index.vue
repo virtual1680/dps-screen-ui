@@ -4,17 +4,17 @@ import screenHeader from '@components/header/index.vue';
 import EarlyWarningNum from '@/components/earlyWarningNum/main.vue';
 import CensusNum from '@components/censusNum/main.vue';
 
-import CenterBox from './components/home/center/index.vue';
-import ServeCategory from './components/home/serveCategory/index.vue';
-import WorkStatus from './components/home/workStatus/index.vue';
-import deviceNews from './components/home/deviceNews/index.vue';
-import serveNode from './components/home/serveNode/index.vue';
-import serveResources from './components/home/serveResources/index.vue';
-import earlyWarning from './components/home/earlyWarning/index.vue';
-import warningAbnormal from './components/home/warningAbnormal/index.vue';
-import workOrderAbbormal from './components/home/workOrderAbbormal/index.vue';
-import workOrderData from './components/home/workOrderData/index.vue';
-import warningTrend from './components/home/warningTrend/index.vue';
+import CenterBox from './components/center/index.vue';
+import ServeCategory from './components/serveCategory/index.vue';
+import WorkStatus from './components/workStatus/index.vue';
+import deviceNews from './components/deviceNews/index.vue';
+import serveNode from './components/serveNode/index.vue';
+import serveResources from './components/serveResources/index.vue';
+import earlyWarning from './components/earlyWarning/index.vue';
+import warningAbnormal from './components/warningAbnormal/index.vue';
+import workOrderAbbormal from './components/workOrderAbbormal/index.vue';
+import workOrderData from './components/workOrderData/index.vue';
+import warningTrend from './components/warningTrend/index.vue';
 
 // 服务器列表
 import serverPage from '../serverPage/index.vue';
