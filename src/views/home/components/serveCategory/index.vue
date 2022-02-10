@@ -2,7 +2,7 @@
 	<div class="chart-box">
 		<div class="header">
 			<div class="title">服务器分类</div>
-			<div class="detail">详情</div>
+			<div class="detail" @click="openServeList">详情</div>
 		</div>
 		<div class="content">
 			<chart />
@@ -15,7 +15,12 @@ import chart from './chart/index.vue';
 export default defineComponent({
 	name: 'serveSource',
 	components: { chart },
-	setup() {},
+	setup(_, { emit }) {
+		const openServeList = () => {
+			emit('openServeList', true);
+		};
+		return { openServeList };
+	},
 });
 </script>
 <style lang="scss" scoped>
@@ -41,6 +46,7 @@ export default defineComponent({
 			font-size: 12px;
 			font-weight: 400;
 			color: #ffffff;
+			cursor: pointer;
 		}
 	}
 	.content {

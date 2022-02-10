@@ -41,6 +41,7 @@ export default defineComponent({
 			getLeftList(); // 获取数据
 		});
 		const loadMore = () => {
+			console.log('0-0-0-0-0-0-00');
 			if (data.loading) {
 				data.loading = false;
 				data.params.startIndex += 1;
@@ -93,12 +94,12 @@ export default defineComponent({
 		height="880"
 		highlight-current-row
 		style="width: 100%">
-		<el-table-column prop="serverName" width="180" :show-overflow-tooltip="true" label="项目">
+		<el-table-column prop="serverName" width="180" :show-overflow-tooltip="true" label="服务名">
 			<template #default="scope">
 				<span class="row_icon">{{ scope.row.serverName }}</span>
 			</template>
 		</el-table-column>
-		<el-table-column prop="ip" :show-overflow-tooltip="true" label="IP地址"></el-table-column>
+		<el-table-column prop="ip" :show-overflow-tooltip="true" label="内网IP"></el-table-column>
 		<el-table-column prop="publicIp" :show-overflow-tooltip="true" label="公网IP"></el-table-column>
 		<el-table-column prop="config" :show-overflow-tooltip="true" label="配置"></el-table-column>
 		<el-table-column prop="cpu" :show-overflow-tooltip="true" label="cpu占用"></el-table-column>

@@ -5,7 +5,7 @@
 				<img src="./img/title-icon.png" alt="" />
 				{{ data.get(`${type}`).title }}
 			</div>
-			<div class="detail">
+			<div class="detail" @click="openServeList">
 				<img src="./img/detail.png" alt="" />
 				详情
 			</div>
@@ -33,7 +33,7 @@ export default defineComponent({
 			default: BChartType.early,
 		},
 	},
-	setup() {
+	setup(_, { emit }) {
 		let data = new Map();
 		data.set('early', {
 			title: '预警趋势',
@@ -47,7 +47,10 @@ export default defineComponent({
 			title: '工单数据',
 			bg: new URL('./img/small-bg.png', import.meta.url).href,
 		});
-		return { data };
+		const openServeList = () => {
+			emit('openServeList', true);
+		};
+		return { openServeList, data };
 	},
 });
 </script>
@@ -80,6 +83,7 @@ export default defineComponent({
 			display: flex;
 			align-items: center;
 			letter-spacing: 2px;
+			cursor: pointer;
 			img {
 				margin-top: 4px;
 				width: 30px;

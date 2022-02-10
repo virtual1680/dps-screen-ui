@@ -29,7 +29,7 @@ export default {
 		app.use(ElTableColumn);
 		app.directive('loadmore', {
 			mounted(el, binding) {
-				const selectWrap = el.querySelector('.el-table__body-wrapper');
+				let selectWrap = el.querySelector('.el-scrollbar__wrap');
 				selectWrap.addEventListener('scroll', function () {
 					let sign = 0;
 					const scrollDistance =

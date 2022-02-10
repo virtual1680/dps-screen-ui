@@ -30,7 +30,10 @@ export default defineComponent({
 		let echartData: any = {};
 
 		const init = async () => {
-			await getData();
+			let [error] = await getData();
+			if (error) {
+				return false;
+			}
 			chart = initChart(chart, lineChart, instance);
 			chartAnim();
 		};
@@ -39,10 +42,15 @@ export default defineComponent({
 			init();
 		});
 		// 获取数据
-		const getData = async () => {
-			await apiErrorCategory().then(res => {
-				echartData = res.data;
-			});
+		const getData = () => {
+			return apiErrorCategory()
+				.then(res => {
+					echartData = res.data;
+					return [null];
+				})
+				.catch(() => {
+					return [true];
+				});
 		};
 
 		const chartAnim = () => {

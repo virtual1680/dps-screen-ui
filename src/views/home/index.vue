@@ -152,7 +152,7 @@ export default defineComponent({
 						<CenterBox style="height: 100%; width: 100%" />
 					</div>
 					<div class="item-3 flex-jc-cb flex-d-c">
-						<ServeCategory style="width: 360px; height: 342px" />
+						<ServeCategory style="width: 360px; height: 342px" @openServeList="openServerPageFun" />
 						<!-- 设备信息 -->
 						<deviceNews />
 					</div>
@@ -161,7 +161,7 @@ export default defineComponent({
 					</div>
 					<div class="item-5">
 						<!-- 工单状态  -->
-						<WorkStatus :chartData="data.orderStatusData" />
+						<WorkStatus :chartData="data.orderStatusData" @openServeList="openServerPageFun" />
 					</div>
 				</div>
 			</div>
@@ -189,16 +189,17 @@ export default defineComponent({
 					<warningAbnormal @openServeList="openServerPageFun" />
 				</div>
 				<div style="height: 280px; width: 100%">
-					<warningTrend />
+					<warningTrend @openServeList="openServerPageFun" />
 				</div>
 				<div style="height: 306px; width: 100%">
-					<workOrderData />
+					<workOrderData @openServeList="openServerPageFun" />
 				</div>
 			</div>
 		</div>
 	</div>
 	<serverPage
 		@closeServerPage="closeSpage"
+		:serverPageShow="data.serverPageShow"
 		:class="['server-page', data.serverPageShow ? 'fadeIn' : 'fadeOut']"></serverPage>
 </template>
 

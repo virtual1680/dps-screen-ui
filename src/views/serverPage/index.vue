@@ -16,27 +16,28 @@ interface RowData {
 }
 export default defineComponent({
 	name: 'servePage',
+	props: { serverPageShow: { type: Boolean, default: false } },
 	components: {
 		serverList,
 		orderList,
 		warningList,
 		serverDetail,
 	},
-	setup(_, { emit }) {
+	setup(props, { emit }) {
 		let data = reactive({
 			tableData: [],
-			serverPageShow: false,
+			serverDetailShow: false,
 		});
 		let ip = ref('');
 
 		// 打开服务器详情
 		const openServeDetail = (row: RowData) => {
 			ip.value = `${row.ip},${row.publicIp},${new Date().getTime()}`;
-			data.serverPageShow = true;
+			data.serverDetailShow = true;
 		};
 		// emit事件监听
 		const closeDetail = (val: string) => {
-			data.serverPageShow = false;
+			data.serverDetailShow = false;
 		};
 
 		const closeServerListPage = () => {
@@ -44,6 +45,7 @@ export default defineComponent({
 		};
 
 		return {
+			props,
 			data,
 			ip,
 			closeServerListPage,
@@ -59,7 +61,7 @@ export default defineComponent({
 		<div class="tool">
 			<span @click="closeServerListPage">返回数据大屏</span>
 		</div>
-		<div class="list_container">
+		<div class="list_container" v-if="props.serverPageShow">
 			<div class="left_box">
 				<div class="title">服务器列表</div>
 				<div class="inner_box">
@@ -84,7 +86,7 @@ export default defineComponent({
 		<serverDetail
 			:ip="ip"
 			@closeServerPage="closeDetail"
-			:class="['server-page', data.serverPageShow ? 'fadeIn' : 'fadeOut']" />
+			:class="['server-page', data.serverDetailShow ? 'fadeIn' : 'fadeOut']" />
 	</div>
 </template>
 
